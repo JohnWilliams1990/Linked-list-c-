@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<pthread.h>
 #include<time.h>
 
 // todo: mkae linked list functions have error checking;
@@ -11,14 +10,26 @@
 // setup for this top be transformed to fifo queue 
 // make it circulary linked?? or only for round robin exercise??
 
-struct node {
+typedef struct pcb_t {
+
+int compTime;
+int waitTime;
+int turnTime;
+int respTime;
+int contextCount;
+
+}pcb,* pcbPtr ;
+
+
+typedef struct node {
   struct node* next;
   struct node* prev;
   int data;
-};
+  pcb process;
+} node, *nodePtr;
 
 
-void newNode(struct node ** arg)
+void newNode( nodePtr * arg)
 {
   (*arg) = calloc(1, sizeof(struct node));
   (*arg)->prev = NULL;
@@ -27,131 +38,141 @@ void newNode(struct node ** arg)
   printf("Inside: %d\n",(*arg)->data);
 }
 // push element to back of list
-void push_back(struct node ** arg)
+void push_back( nodePtr * arg)
 {
-int counter = 1;
-struct node* curPtr = (*arg);
-struct node* prev = (*arg)->prev;
+  int counter = 1;
+  struct node* curPtr = (*arg);
 
+if ( curPtr == NULL)
+{
+printf("HERE\n\n");
+//newNode(arg);
+(*arg) = calloc(1, sizeof(struct node));
+(*arg)->prev = NULL;
+(*arg)->next = NULL;
+(*arg)->data = 0;
+
+
+return;
+}
   while (curPtr->next != NULL)
   {
-   prev = curPtr;
-   curPtr = curPtr->next;
-   counter +=1;
+    curPtr = curPtr->next;
+    counter +=1;
   }
-curPtr->next = calloc(1, sizeof(struct node));
-curPtr->next->prev = curPtr;
-curPtr->next->data = counter;
+  curPtr->next = calloc(1, sizeof(struct node));
+  curPtr->next->prev = curPtr;
+  curPtr->next->data = counter;
 }
 
 // pop elememt from list at specif index
-void pop(struct node ** arg, int index)
+void pop( nodePtr * arg, int index)
 {
+
+if ((*arg) == NULL)
+{
+printf("HERE\n\n");
+return;
+}
+
+
 int counter = 0;
 struct node* curPtr = (*arg);
 struct node* prev = (*arg)->prev;
 
   while (curPtr->next != NULL && counter < index)
   {
-   prev = curPtr;
-   curPtr = curPtr->next;
-   counter +=1;
+    prev = curPtr;
+    curPtr = curPtr->next;
+    counter +=1;
   }
-
-prev->next = curPtr->next;
-curPtr->next->prev = prev;
-free(curPtr);
-
+  prev->next = curPtr->next;
+  curPtr->next->prev = prev;
+  free(curPtr);
 }
 
 // pop element off of end
-void pop_back(struct node ** arg)
+void pop_back( nodePtr * arg)
 {
-int counter = 0;
-struct node* curPtr = (*arg);
-struct node* prev = (*arg)->prev;
+  int counter = 0;
+  struct node* curPtr = (*arg);
+  struct node* prev = (*arg)->prev;
+
+  if (curPtr == NULL) { exit(0);  }
+  if (curPtr->next == NULL && curPtr->prev == NULL)
+  {
+	  free((*arg));
+	  (*arg) = NULL;
+	  //free(curPtr);
+	  //curPtr = NULL;
+	  return;
+  }
 
   while (curPtr->next != NULL)
   {
-   prev = curPtr;
-   curPtr = curPtr->next;
-   counter +=1;
+    prev = curPtr;
+    curPtr = curPtr->next;
+    counter +=1;
   }
-
-
-prev->next = curPtr->next;
-free(curPtr);
-//curPtr->next->prev = prev;
+  if (prev != NULL) {
+	  prev->next = curPtr->next;
+  }
+  free(curPtr);
+  curPtr = NULL;
 }
 
-void print(struct node ** arg)
+void print( nodePtr * arg)
 {
-struct node* curPtr = (*arg);
-struct node* prev = (*arg)->prev;
+  struct node* curPtr = (*arg);
 
+  if (curPtr == NULL)
+  {
+	  return; 
+  }
   while (curPtr->next != NULL)
   {
    printf("%d ",curPtr->data);
-   prev = curPtr;
+   //prev = curPtr;
    curPtr = curPtr->next;
   }
-
    printf("\n\n");
-
-
 }
 
 int main()
 {
 
-struct node * head; 
-//head->data = 0;
-//head = calloc(1, sizeof(struct node));
+//struct node * head = NULL; 
+
+nodePtr head = NULL;
+//newNode(&head);
+
 //  printf("outside:%d\n", head->data);
-newNode(&head);
+for(int i = 0; i < 10 ; i ++)
+{
+  push_back(&head);
+  printf("pushed at iteration %d\n",i);
+  print(&head);
+}
+ printf("outside:%d\n", head->data);
 
-  printf("outside:%d\n", head->data);
-push_back(&head);
-  printf("\tpush one element:\n");
-  printf("outside:%d\n", head->data);
- printf("outside next:%d\n\n", head->next->data);
+for(int i = 0; i < 10 ; i ++)
+{
+  pop_back(&head);
+  printf("pushed at iteration %d\n",i);
+  print(&head);
+}
 
-  printf("\tpush one element:\n");
-
-push_back(&head);
-  printf("outside:%d\n", head->data);
-
+pop(&head,1);
 print(&head);
- printf("outside next:%d\n", head->next->data);
- printf("outside next:%d\n", head->next->next->data);
-  printf("\tpush one element:\n");
-push_back(&head);
- printf("outside next:%d\n\n", head->next->next->next->data);
 
-  printf("\tpop one element at position 2:\n");
+//pop_back(&head);
+//print(&head);
+//pop_back(&head);
 
-pop(&head,2);
-
-  printf("outside:%d\n", head->data);
- printf("outside next:%d\n", head->next->data);
- printf("outside next:%d\n\n\n", head->next->next->data);
-// printf("outside next:%d\n", head->next->next->next->data);
-  printf("\tpop back one element:\n");
-pop_back(&head);
-  printf("outside:%d\n", head->data);
- printf("outside next:%d\n", head->next->data);
-
-
-  printf("\tpop back one element:\n");
-pop_back(&head);
-  printf("outside:%d\n", head->data);
- printf("outside next:%d\n", head->next->data);
-
+//print(&head);
 return 0;
 
 
- //printf("outside next:%d\n", head->next->data);
- //printf("outside next:%d\n", head->next->next->data);
- //printf("outside next:%d\n", head->next->next->next->data);
+ 
 }
 
