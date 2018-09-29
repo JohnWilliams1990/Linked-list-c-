@@ -6,7 +6,11 @@
 // make linked list have its own file
 // setup for this top be transformed to fifo queue 
 // make pop in place correct for PCB as well. 
-// figure out the order issue with the pus and pop being out of sync.
+// how to duplicate queue??
+	// reread file??
+		// generate queue at onset of schedule specific function
+		// via function and destroy as function goes??
+		// mean generating an array to hold items--> dynamic array.....
 
 typedef struct pcb_t {
 int compTime;
