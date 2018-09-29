@@ -6,6 +6,6 @@
 
 git add *
 git commit -m "ideas...."
-git pull origin pcb
+git pull origin master
 git push origin pcb
 
