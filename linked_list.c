@@ -2,13 +2,11 @@
 #include<stdlib.h>
 #include<time.h>
 
-// todo: mkae linked list functions have error checking;
-// make linked list have ability to be substaciated without any elements
-// ---> merge the push back with newNode
 
 // make linked list have its own file
 // setup for this top be transformed to fifo queue 
-// make it circulary linked?? or only for round robin exercise??
+// make pop in place correct for PCB as well. 
+// figure out the order issue with the pus and pop being out of sync.
 
 typedef struct pcb_t {
 int compTime;
@@ -131,6 +129,11 @@ void print( nodePtr * arg)
   {
     return; 
   }
+   printf("compTime    %d\n ",curPtr->process->compTime    );
+   printf("waitTime    %d\n ",curPtr->process->waitTime    );
+   printf("turnTime    %d\n ",curPtr->process->turnTime    );
+   printf("respTime    %d\n ",curPtr->process->respTime    );
+   printf("contextCount%d\n\n ",curPtr->process->contextCount);
   while (curPtr->next != NULL)
   {
    //printf("%d\n ",curPtr->data);
