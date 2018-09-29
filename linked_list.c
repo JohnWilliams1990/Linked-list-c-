@@ -170,15 +170,7 @@ for(int i = 0; i < 10 ; i ++)
   print(&head);
 }
 
-
-//pop_back(&head);
-//print(&head);
-//pop_back(&head);
-
-//print(&head);
 return 0;
-
-
  
 }
 
