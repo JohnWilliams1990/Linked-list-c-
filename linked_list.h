@@ -5,7 +5,6 @@ typedef struct pcb_t {
   int pid;
   int arrival_time;
   int burst_time;
-int something;
   
   int compTime;
   int waitTime;
@@ -50,7 +49,6 @@ void push_back( nodePtr * arg, node* item)
     (*arg)->process->pid         = item->process->pid         ;
     (*arg)->process->arrival_time= item->process->arrival_time;
     (*arg)->process->burst_time  = item->process->burst_time  ;
-    (*arg)->process->something   = item->process->something   ;
     (*arg)->process->contextCount = item->process->contextCount;
 
     (*arg)->process->compTime = item->process->compTime;
@@ -72,7 +70,6 @@ void push_back( nodePtr * arg, node* item)
   curPtr->next->process->pid         = item->process->pid         ;
   curPtr->next->process->arrival_time= item->process->arrival_time;
   curPtr->next->process->burst_time  = item->process->burst_time  ;
-  curPtr->next->process->something   = item->process->something   ;
   curPtr->next->process->contextCount = item->process->contextCount;
 
   curPtr->next->process->compTime = item->process->compTime;
@@ -164,7 +161,6 @@ void print( nodePtr * arg)
    printf("pid            %d\n "  ,curPtr->process->pid         );
    printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
    printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
-   printf("something      %d\n "  ,curPtr->process->something   );
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
  //  printf("compTime       %d\n ",curPtr->process->compTime    );
  //  printf("waitTime       %d\n ",curPtr->process->waitTime    );
@@ -176,7 +172,6 @@ void print( nodePtr * arg)
    printf("pid            %d\n "  ,curPtr->process->pid         );
    printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
    printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
-   printf("something      %d\n "  ,curPtr->process->something   );
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
   // printf("compTime      %d\n ",curPtr->next->process->compTime    );
   // printf("waitTime      %d\n ",curPtr->next->process->waitTime    );

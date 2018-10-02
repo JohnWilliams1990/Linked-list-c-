@@ -50,16 +50,9 @@ nodePtr read_in_file(FILE* file, nodePtr head){
   printf("-->%d\n", index);
   currentPCB->process->burst_time = index;
 
-  fscanf (file, "%d", &index);    
-  printf("-->%d\n", index);
-  currentPCB->process->something = index;
-
-
    printf("pid            %d\n "  ,currentPCB->process->pid         );
    printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
    printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-   printf("something      %d\n "  ,currentPCB->process->something   );
-
 
   push_back(&head, currentPCB);
 
@@ -138,7 +131,6 @@ for(int i = 0; i < 10 ; i ++)
 //   printf("pid            %d\n "  ,currentPCB->process->pid         );
 //   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
 //   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-//   printf("something      %d\n "  ,currentPCB->process->something   );
 //   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
 
 //  printf("\t\tpop iteration %d\n",i);
