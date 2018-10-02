@@ -2,11 +2,22 @@
 #define NODE
 
 typedef struct pcb_t {
-int compTime;
-int waitTime;
-int turnTime;
-int respTime;
-int contextCount;
+  int pid;
+  int arrival_time;
+  int burst_time;
+int something;
+  
+  int compTime;
+  int waitTime;
+  int turnTime;
+  int respTime;
+  int contextCount;
+  
+  int avgCompTime;
+  int avgWaitTime;
+  int avgTurnTime;
+  int avgRespTime;
+  int totContextCount;
 } pcb,* pcbPtr ;
 
 typedef struct node {
