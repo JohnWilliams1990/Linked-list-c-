@@ -31,15 +31,22 @@ typedef struct node {
   pcbPtr process;
 } node, *nodePtr;
 
+void freeNode(nodePtr * arg) {
+  free((*arg)->process);
+  free((*arg));
+  return;
+}
+
+
 // push element to back of list
 void push_back( nodePtr * arg, node* item)
 {
   int counter = 1;
-  struct node* curPtr = (*arg);
+  nodePtr curPtr = (*arg);
 
 if ( curPtr == NULL)
 {
-  (*arg) = calloc(1, sizeof(struct node));
+  (*arg) = calloc(1, sizeof( node));
   (*arg)->prev = NULL;
   (*arg)->next = NULL;
 
@@ -70,21 +77,22 @@ if ( curPtr == NULL)
   curPtr->next->data = counter;
 }
 
+
+
+
 // pop elememt from list at specif index
-void pop( nodePtr * arg, int index)
+nodePtr pop( nodePtr * arg, int index)
 {
+
+  int counter = 0;
+  nodePtr curPtr = (*arg);
+  nodePtr prev = (*arg)->prev;
 
   if ((*arg) == NULL)
   {
-  printf("HERE\n\n");
-  return;
+    printf("HERE\n\n");
+    return curPtr;
   }
-  
-  
-  int counter = 0;
-  struct node* curPtr = (*arg);
-  struct node* prev = (*arg)->prev;
-  //struct node* tmp = curPtr;
   
   while (curPtr->next != NULL && counter < index)
   {
@@ -94,29 +102,40 @@ void pop( nodePtr * arg, int index)
   }
   if(prev != NULL){
   prev->next = curPtr->next;
+  if (curPtr->next != NULL)
+  {
+	  curPtr->next->prev = prev;
   }
-  curPtr->next->prev = prev;
-  curPtr->prev->next = curPtr->next;
+  }
+  else
+  { // we are at head of list to pop front
+	  (*arg) = (*arg)->next;
+	  (*arg)->prev = curPtr->prev;
+
+  }
 
 
-  free(curPtr->process);
-  free(curPtr);
+//  
 
+//  if (curPtr->prev != NULL)
+//  {
+//	  curPtr->prev->next = curPtr->next;
+//  }
+  
+  return curPtr; 
+
+ // free(curPtr->process);
+ // free(curPtr);
 }
 
 // pop element off of end
 
-void freeNode(nodePtr * arg) {
-  free((*arg)->process);
-  free((*arg));
-  return;
-}
 
- nodePtr pop_back( nodePtr * arg)
+nodePtr pop_back( nodePtr * arg)
 {
   int counter = 0;
-  struct node* curPtr = (*arg);
-  struct node* prev = (*arg)->prev;
+  nodePtr curPtr = (*arg);
+  nodePtr prev = (*arg)->prev;
 
   if (curPtr == NULL) { exit(0);  }
   if (curPtr->next == NULL && curPtr->prev == NULL)
@@ -125,7 +144,7 @@ void freeNode(nodePtr * arg) {
    // free((*arg)->process);
    // free((*arg));
    // (*arg) = NULL;
-  }
+   }
 
   while (curPtr->next != NULL)
   {
@@ -146,7 +165,7 @@ void freeNode(nodePtr * arg) {
 
 void print( nodePtr * arg)
 {
-  struct node* curPtr = (*arg);
+  nodePtr curPtr = (*arg);
 
   if (curPtr == NULL)
   {
@@ -185,14 +204,15 @@ for(int i = 0; i < 10 ; i ++)
 {
 currentPCB->process->compTime = i;
   push_back(&head, currentPCB);
-  printf("push iteration %d\n",i);
+  printf("\tpush iteration %d\n",i);
   print(&head);
 }
  printf("outside:%d\n", head->data);
 
 for(int i = 0; i < 10 ; i ++)
 {
-currentPCB = pop_back(&head);
+//currentPCB = pop_back(&head, 0);
+currentPCB = pop(&head, i);
 
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
    printf("compTime       %d\n "  ,currentPCB->process->compTime    );
@@ -202,9 +222,13 @@ currentPCB = pop_back(&head);
    printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
 
-  printf("pop iteration %d\n",i);
+  printf("\t\tpop iteration %d\n",i);
+  push_back(&head, currentPCB); 
   print(&head);
+
+  
 }
+
 
 return 0;
  
