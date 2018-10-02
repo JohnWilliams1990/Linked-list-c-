@@ -1,19 +1,36 @@
+.SUFFIXES : .cc
+.SUFFIXES : .c
+.SUFFIXES : .cpp
 
-TARGETS = linked_list
+INCDIR =
+LIBDIR =
 
-CROSS_TOOL = 
-CC_CPP = $(CROSS_TOOL)g++
-CC_C = $(CROSS_TOOL)gcc
+CC = gcc
 
-CFLAGS = -Wall -g -std=c99 # -Werror  
+CXXFLAGS = -g -std=c99
 
+LIBS = -lm
 
-all: clean $(TARGETS)
+OBJS = processor.o
 
+TARGET = processor
 
+$(TARGET): $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LIBDIR) $(LIBS)        
+	rm -f $(OBJS)
 
-$(TARGET): 
-	$(CC_C) $(CFLAGS) $@.c -o $@ 
+.cc.o:
+	$(CC) -c $(CXXFLAGS) $(INCDIR) $<
+
+.c.o:
+	$(CC) -c $(CXXFLAGS) $(INCDIR) $<
+
+.cpp.o:
+	$(CC) -c $(CXXFLAGS) $(INCDIR) $<
 
 clean:
-	rm -f $(TARGETS)  
+	rm -f $(OBJS) $(TARGET) core
+
+
+
+
