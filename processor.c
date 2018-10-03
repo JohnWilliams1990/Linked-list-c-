@@ -100,12 +100,11 @@ void FCFS(nodePtr head) //; nodePtr RunningQueue)
 
   time += 1;
   timeRemaining -= 1;
-  //printf("\t\tpop iteration %d\n",i);
-  //push_back(&head, currentPCB); 
   
   
   }
   
+  push_back(&head, currentPCB); 
   print(&head);
 
 }
