@@ -3,6 +3,9 @@
 #include<time.h>
 #include "linked_list.h"
 
+
+//sum function having issues across platforms---> use recursion ??
+
 // make linked list have its own file
 // setup for this top be transformed to fifo queue 
 // make pop in place correct for PCB as well. 
@@ -23,6 +26,7 @@ nodePtr read_in_file(FILE* file, nodePtr head){
   int index = 0;
 
   while (!feof (file)){
+    index = 0;
     fscanf (file, "%d", &index);    
     currentPCB->process->pid = index;
     fscanf (file, "%d", &index);    
@@ -31,6 +35,7 @@ nodePtr read_in_file(FILE* file, nodePtr head){
     currentPCB->process->burst_time = index; 
     if (currentPCB->process->pid == 0){return head;}  
     push_back(&head, currentPCB);
+print(&head);
   }
   return head;
 }
@@ -41,10 +46,11 @@ int getTime(nodePtr head)
   nodePtr curPtr = head;
 //  sum += curPtr->process->burst_time;
 //  printf("%d\n",  curPtr->process->burst_time);
-  while (curPtr->next != NULL)
+  //while (curPtr->next != NULL)
+  while (curPtr != NULL)
   {
-   sum += curPtr->process->burst_time;
   // printf("%d\n",  curPtr->process->burst_time);
+   sum += curPtr->process->burst_time;
    curPtr = curPtr->next;
   // printf("\t\t%d\n",  curPtr->process->burst_time);
   }
@@ -83,11 +89,12 @@ void FCFS(nodePtr head) //; nodePtr RunningQueue)
     timeRemaining =  currentPCB->process->burst_time;
   }
 
+  print(&head);
    printf("Time Remaining: %d\n\n",timeRemaining);
 
 
-   printf("~~~~~~~~~~~~~~~~~~~~~~~ time %d~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ", time);
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+   printf("---------------------- time %d-----------------------------\n ", time);
+   printf("-----------------------------------------------------------\n ");
    printf("pid            %d\n "  ,currentPCB->process->pid         );
    printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
    printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
@@ -96,7 +103,7 @@ void FCFS(nodePtr head) //; nodePtr RunningQueue)
    printf("turnTime       %d\n "  ,currentPCB->process->turnTime    );
    printf("respTime       %d\n "  ,currentPCB->process->respTime    );
    printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+   printf("-----------------------------------------------------------\n ");
 
   time += 1;
   timeRemaining -= 1;
@@ -105,7 +112,6 @@ void FCFS(nodePtr head) //; nodePtr RunningQueue)
   }
   
   push_back(&head, currentPCB); 
-  print(&head);
 
 }
 
@@ -203,6 +209,9 @@ currentPCB->process = calloc(1, sizeof(struct pcb_t));
 
 FCFS(head);
 
+  printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
+  print(&head);
+  printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
 return 0;
  
 }

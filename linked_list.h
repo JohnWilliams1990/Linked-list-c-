@@ -157,7 +157,7 @@ void print( nodePtr * arg)
     return; 
   }
 
-   //printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
   printf("pid            %d\n "  ,curPtr->process->pid         );
   printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
   printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
