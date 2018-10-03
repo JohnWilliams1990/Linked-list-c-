@@ -35,7 +35,7 @@ nodePtr read_in_file(FILE* file, nodePtr head){
     currentPCB->process->burst_time = index; 
     if (currentPCB->process->pid == 0){return head;}  
     push_back(&head, currentPCB);
-print(&head);
+    //print(&head);
   }
   return head;
 }
@@ -60,14 +60,15 @@ return sum;
 }
 
 
-void FCFS(nodePtr header) //; nodePtr RunningQueue)
+nodePtr FCFS(nodePtr header) //; nodePtr RunningQueue)
 {
 nodePtr head = header;
   int time = 0;
   int curPcbVal = 0;
-  nodePtr currentPCB = calloc(1, sizeof(struct node));
-  currentPCB->process = calloc(1, sizeof(struct pcb_t));
-
+  //nodePtr currentPCB = calloc(1, sizeof(struct node));
+  //currentPCB->process = calloc(1, sizeof(struct pcb_t));
+  nodePtr currentPCB = NULL;// = calloc(1, sizeof(struct node));
+  //  nodePtr currentPCB;
   int stop = getTime(head);
   //start loop early
   int timeRemaining = 0;
@@ -82,15 +83,14 @@ nodePtr head = header;
 //  }
 
   if (timeRemaining == 0){ // pop new process of of ready queue      
-    if (currentPCB->process->pid != 0)    
+    if (currentPCB != NULL && currentPCB->process->pid != 0)    
     { push_back(&head, currentPCB);}
 
     currentPCB = pop(&head, curPcbVal);
-  //timeRemaining = time + currentPCB->process->burst_time;
     timeRemaining =  currentPCB->process->burst_time;
   }
 
-  print(&head);
+//  print(&head);
    printf("Time Remaining: %d\n\n",timeRemaining);
 
 
@@ -113,7 +113,7 @@ nodePtr head = header;
   }
   
   push_back(&head, currentPCB); 
-
+  return head;
 }
 
 
@@ -153,62 +153,7 @@ printf("---->%d\n\n\n", time);
 nodePtr currentPCB = calloc(1, sizeof(struct node));
 currentPCB->process = calloc(1, sizeof(struct pcb_t));
 
-//  printf("outside:%d\n", head->data);
-
-// TESTING CODE 
-//for(int i = 0; i < 10 ; i ++)
-//{
-//currentPCB->process->compTime = i;
-//  push_back(&head, currentPCB);
-//  printf("\tpush iteration %d\n",i);
-//  print(&head);
-//}
-// printf("outside:%d\n", head->data);
-//
-//for(int i = 0; i < 10 ; i ++)
-//{
-////currentPCB = pop_back(&head, 0);
-//currentPCB = pop(&head, i);
-//
-//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-//   printf("compTime       %d\n "  ,currentPCB->process->compTime    );
-//   printf("waitTime       %d\n "  ,currentPCB->process->waitTime    );
-//   printf("turnTime       %d\n "  ,currentPCB->process->turnTime    );
-//   printf("respTime       %d\n "  ,currentPCB->process->respTime    );
-//   printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
-//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-//
-//  printf("\t\tpop iteration %d\n",i);
-//  push_back(&head, currentPCB); 
-//  print(&head);
-//
-//  
-//}
-
-//for(int i = 0; i < 10 ; i ++)
-//{
-////currentPCB = pop_back(&head, 0);
-//currentPCB = pop(&head, i);
-//
-//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-//   printf("pid            %d\n "  ,currentPCB->process->pid         );
-//   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
-//   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-//
-//  printf("\t\tpop iteration %d\n",i);
-//  push_back(&head, currentPCB); 
-//
-//  print(&head);
-//
-//
-//}
-//
-////  printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
-////  print(&head);
-//
-
-FCFS(head);
+head = FCFS(head);
 
   printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
   print(&head);
