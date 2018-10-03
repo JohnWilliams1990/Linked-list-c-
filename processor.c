@@ -73,8 +73,6 @@ nodePtr head = header;
   //start loop early
   int timeRemaining = 0;
 //  currentPCB = pop(&head, curPcbVal);
-  while (time < stop )
-  {
 // sum up all burst times and decremet till then ??
 // loop linked list and wait until we see duplocate pid
 
@@ -82,12 +80,15 @@ nodePtr head = header;
 //  currentPCB = pop(&head, curPcbVal);
 //  }
 
+  while (time < stop )
+  {
   if (timeRemaining == 0){ // pop new process of of ready queue      
     if (currentPCB != NULL && currentPCB->process->pid != 0)    
     { push_back(&head, currentPCB);}
-
-    currentPCB = pop(&head, curPcbVal);
-    timeRemaining =  currentPCB->process->burst_time;
+     
+     currentPCB = pop(&head, curPcbVal);
+     timeRemaining =  currentPCB->process->burst_time;
+     currentPCB->process->waitTime = time - currentPCB->process->arrival_time;
   }
 
 //  print(&head);
@@ -99,7 +100,7 @@ nodePtr head = header;
    printf("pid            %d\n "  ,currentPCB->process->pid         );
    printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
    printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-   printf("compTime       %d\n "  ,currentPCB->process->compTime    );
+   printf("finishTime     %d\n "  ,currentPCB->process->finishTime  );
    printf("waitTime       %d\n "  ,currentPCB->process->waitTime    );
    printf("turnTime       %d\n "  ,currentPCB->process->turnTime    );
    printf("respTime       %d\n "  ,currentPCB->process->respTime    );
@@ -109,7 +110,13 @@ nodePtr head = header;
   time += 1;
   timeRemaining -= 1;
   
+  if (timeRemaining == 0){ // pop new process of of ready queue      
   
+     currentPCB->process->finishTime = time ;
+
+     currentPCB->process->turnTime = currentPCB->process->finishTime - currentPCB->process->arrival_time;
+     currentPCB->process->respTime = currentPCB->process->waitTime;
+  }
   }
   
   push_back(&head, currentPCB); 
@@ -132,7 +139,8 @@ int main(int argc, char *argv[])
 
   FILE* file;
   //file = fopen (argv[1], "r");
-  file = fopen ("input10", "r");
+  //file = fopen ("input10", "r");
+  file = fopen ("input5", "r");
   
 
 //struct node * head = NULL; 

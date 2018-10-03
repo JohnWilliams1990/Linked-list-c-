@@ -6,7 +6,7 @@ typedef struct pcb_t {
   int arrival_time;
   int burst_time;
   
-  int compTime;
+  int finishTime;
   int waitTime;
   int turnTime;
   int respTime;
@@ -51,7 +51,7 @@ void push_back( nodePtr * arg, node* item)
     (*arg)->process->burst_time  = item->process->burst_time  ;
     (*arg)->process->contextCount = item->process->contextCount;
 
-    (*arg)->process->compTime = item->process->compTime;
+    (*arg)->process->finishTime = item->process->finishTime;
     (*arg)->process->waitTime = item->process->waitTime;
     (*arg)->process->turnTime = item->process->turnTime;
     (*arg)->process->respTime = item->process->respTime;
@@ -72,7 +72,7 @@ void push_back( nodePtr * arg, node* item)
   curPtr->next->process->burst_time  = item->process->burst_time  ;
   curPtr->next->process->contextCount = item->process->contextCount;
 
-  curPtr->next->process->compTime = item->process->compTime;
+  curPtr->next->process->finishTime = item->process->finishTime;
   curPtr->next->process->waitTime = item->process->waitTime;
   curPtr->next->process->turnTime = item->process->turnTime;
   curPtr->next->process->respTime = item->process->respTime;
@@ -163,30 +163,36 @@ void print( nodePtr * arg)
   {
     return; 
   }
+printf("\n| %10s | %10s | %10s | %10s | %10s | %10s | %10s |%10s| \n","Process ID", "Arrival", "CPU Burst", "Finish", "Wait", "Turn Time", "Responce", "# of Context" );
 
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-   printf("pid            %d\n "  ,curPtr->process->pid         );
-   printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
-   printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
-   printf("compTime       %d\n ",curPtr->process->compTime    );
-   printf("waitTime       %d\n ",curPtr->process->waitTime    );
-   printf("turnTime       %d\n ",curPtr->process->turnTime    );
-   printf("respTime       %d\n ",curPtr->process->respTime    );
-   printf("contextCount   %d\n\n ",curPtr->process->contextCount);
-  printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-  while (curPtr->next != NULL)
+ printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//printf("\n| %10d | %10d | %10d | %10d | %10d | %10d | %10d | %10d | \n",curPtr->process->pid, curPtr->process->arrival_time, curPtr->process->burst_time, curPtr->process->finishTime, curPtr->process->waitTime, curPtr->process->turnTime, curPtr->process->respTime, curPtr->process->contextCount);
+  // printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+  // printf("pid            %d\n "  ,curPtr->process->pid         );
+  // printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
+  // printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
+  // printf("finishTime       %d\n ",curPtr->process->finishTime    );
+  // printf("waitTime       %d\n ",curPtr->process->waitTime    );
+  // printf("turnTime       %d\n ",curPtr->process->turnTime    );
+  // printf("respTime       %d\n ",curPtr->process->respTime    );
+  // printf("contextCount   %d\n\n ",curPtr->process->contextCount);
+  //printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+  //while (curPtr->next != NULL)
+  while (curPtr != NULL)
   {
-   printf("pid            %d\n "  ,curPtr->next->process->pid         );
-   printf("arrival_time   %d\n "  ,curPtr->next->process->arrival_time);
-   printf("burst_time     %d\n "  ,curPtr->next->process->burst_time  );
-   printf("compTime      %d\n ",curPtr->next->process->compTime    );
-   printf("waitTime      %d\n ",curPtr->next->process->waitTime    );
-   printf("turnTime      %d\n ",curPtr->next->process->turnTime    );
-   printf("respTime      %d\n ",curPtr->next->process->respTime    );
-   printf("contextCount  %d\n\n ",curPtr->next->process->contextCount);
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+printf("| %10d | %10d | %10d | %10d | %10d | %10d | %10d | %10d | \n",curPtr->process->pid, curPtr->process->arrival_time, curPtr->process->burst_time, curPtr->process->finishTime, curPtr->process->waitTime, curPtr->process->turnTime, curPtr->process->respTime, curPtr->process->contextCount);
+  // printf("pid            %d\n "  ,curPtr->next->process->pid         );
+  // printf("arrival_time   %d\n "  ,curPtr->next->process->arrival_time);
+  // printf("burst_time     %d\n "  ,curPtr->next->process->burst_time  );
+  // printf("finishTime      %d\n ",curPtr->next->process->finishTime    );
+  // printf("waitTime      %d\n ",curPtr->next->process->waitTime    );
+  // printf("turnTime      %d\n ",curPtr->next->process->turnTime    );
+  // printf("respTime      %d\n ",curPtr->next->process->respTime    );
+  // printf("contextCount  %d\n\n ",curPtr->next->process->contextCount);
+  // printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
    curPtr = curPtr->next;
   }
+ printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
    printf("\n\n");
 }
 
