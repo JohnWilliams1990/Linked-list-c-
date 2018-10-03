@@ -39,24 +39,26 @@ nodePtr read_in_file(FILE* file, nodePtr head){
 
   int index = 0;
   fscanf (file, "%d", &index);    
-  printf("-->%d\n", index);
+  //printf("-->%d\n", index);
   currentPCB->process->pid = index;
 
   fscanf (file, "%d", &index);    
-  printf("-->%d\n", index);
+  //printf("-->%d\n", index);
   currentPCB->process->arrival_time = index;
 
   fscanf (file, "%d", &index);    
-  printf("-->%d\n", index);
+  //printf("-->%d\n", index);
   currentPCB->process->burst_time = index;
 
-   printf("pid            %d\n "  ,currentPCB->process->pid         );
-   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
-   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
+  // printf("pid            %d\n "  ,currentPCB->process->pid         );
+  // printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
+  // printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
+
+if (currentPCB->process->pid == 0){return head;}
 
   push_back(&head, currentPCB);
 
-  print(&head);
+  //print(&head);
 
   }
 
@@ -125,22 +127,24 @@ currentPCB->process = calloc(1, sizeof(struct pcb_t));
 for(int i = 0; i < 10 ; i ++)
 {
 //currentPCB = pop_back(&head, 0);
-//currentPCB = pop(&head, 0);
+currentPCB = pop(&head, 0);
 
-//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-//   printf("pid            %d\n "  ,currentPCB->process->pid         );
-//   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
-//   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+   printf("pid            %d\n "  ,currentPCB->process->pid         );
+   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
+   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
+   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
 
-//  printf("\t\tpop iteration %d\n",i);
-//  push_back(&head, currentPCB); 
-//  print(&head);
-
-  
-}
+  printf("\t\tpop iteration %d\n",i);
+  push_back(&head, currentPCB); 
 
   print(&head);
+
+
+}
+
+//  printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
+//  print(&head);
 
 return 0;
  

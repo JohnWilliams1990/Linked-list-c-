@@ -109,15 +109,15 @@ nodePtr pop( nodePtr * arg, int index)
   {
     prev->next = curPtr->next;
   }
-
-  if (curPtr->next != NULL)
-  {
-    curPtr->next->prev = prev;
-  }
   else
   { // we are at head of list to pop front
     (*arg) = (*arg)->next;
     (*arg)->prev = curPtr->prev;
+  }
+
+  if (curPtr->next != NULL)
+  {
+    curPtr->next->prev = prev;
   }
   return curPtr; 
 }
@@ -158,10 +158,10 @@ void print( nodePtr * arg)
   }
 
    //printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-   printf("pid            %d\n "  ,curPtr->process->pid         );
-   printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
-   printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+  printf("pid            %d\n "  ,curPtr->process->pid         );
+  printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
+  printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
+  printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
  //  printf("compTime       %d\n ",curPtr->process->compTime    );
  //  printf("waitTime       %d\n ",curPtr->process->waitTime    );
  //  printf("turnTime       %d\n ",curPtr->process->turnTime    );
@@ -169,9 +169,9 @@ void print( nodePtr * arg)
  //  printf("contextCount   %d\n\n ",curPtr->process->contextCount);
   while (curPtr->next != NULL)
   {
-   printf("pid            %d\n "  ,curPtr->process->pid         );
-   printf("arrival_time   %d\n "  ,curPtr->process->arrival_time);
-   printf("burst_time     %d\n "  ,curPtr->process->burst_time  );
+   printf("pid            %d\n "  ,curPtr->next->process->pid         );
+   printf("arrival_time   %d\n "  ,curPtr->next->process->arrival_time);
+   printf("burst_time     %d\n "  ,curPtr->next->process->burst_time  );
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
   // printf("compTime      %d\n ",curPtr->next->process->compTime    );
   // printf("waitTime      %d\n ",curPtr->next->process->waitTime    );
