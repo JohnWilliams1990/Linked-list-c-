@@ -18,53 +18,67 @@
 
 
 nodePtr read_in_file(FILE* file, nodePtr head){
-
-  
-
-//  nodePtr head = (*header);
-
   nodePtr currentPCB = calloc(1, sizeof(struct node));
   currentPCB->process = calloc(1, sizeof(struct pcb_t));
-  //int index = 0;
-  //fscanf (file, "%d", &index);    
-  //matPtr->left.rows = index;
-  //index =0;
-  //fscanf (file, "%d", &index);    
-  //matPtr->left.cols = index;  
-  //populate_matrix(&matPtr->left);
-
-
+  int index = 0;
 
   while (!feof (file)){
-
-  int index = 0;
-  fscanf (file, "%d", &index);    
-  //printf("-->%d\n", index);
-  currentPCB->process->pid = index;
-
-  fscanf (file, "%d", &index);    
-  //printf("-->%d\n", index);
-  currentPCB->process->arrival_time = index;
-
-  fscanf (file, "%d", &index);    
-  //printf("-->%d\n", index);
-  currentPCB->process->burst_time = index;
-
-  // printf("pid            %d\n "  ,currentPCB->process->pid         );
-  // printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
-  // printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-
-if (currentPCB->process->pid == 0){return head;}
-
-  push_back(&head, currentPCB);
-
-  //print(&head);
+    fscanf (file, "%d", &index);    
+    currentPCB->process->pid = index;
+  
+    fscanf (file, "%d", &index);    
+    currentPCB->process->arrival_time = index;
+  
+    fscanf (file, "%d", &index);    
+    currentPCB->process->burst_time = index;
+  
+    if (currentPCB->process->pid == 0){return head;}  
+    push_back(&head, currentPCB);
 
   }
 
-return head;
+  return head;
 
 }
+
+
+
+
+void FCFS(nodePtr head) //; nodePtr RunningQueue)
+{
+  int time = 0;
+  int curPcbVal = 0;
+  nodePtr currentPCB = calloc(1, sizeof(struct node));
+  currentPCB->process = calloc(1, sizeof(struct pcb_t));
+
+
+  //while (true)
+  //{
+//if (currentPCB->process)        
+currentPCB = pop(&head, curPcbVal);
+
+   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+   printf("pid            %d\n "  ,currentPCB->process->pid         );
+   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
+   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
+   printf("compTime       %d\n "  ,currentPCB->process->compTime    );
+   printf("waitTime       %d\n "  ,currentPCB->process->waitTime    );
+   printf("turnTime       %d\n "  ,currentPCB->process->turnTime    );
+   printf("respTime       %d\n "  ,currentPCB->process->respTime    );
+   printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
+   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+
+  //printf("\t\tpop iteration %d\n",i);
+  //push_back(&head, currentPCB); 
+  
+  
+  //}
+  
+
+}
+
+
+
 
 int main(int argc, char *argv[])
 {
@@ -124,27 +138,30 @@ currentPCB->process = calloc(1, sizeof(struct pcb_t));
 //  
 //}
 
-for(int i = 0; i < 10 ; i ++)
-{
-//currentPCB = pop_back(&head, 0);
-currentPCB = pop(&head, 0);
-
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-   printf("pid            %d\n "  ,currentPCB->process->pid         );
-   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
-   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
-   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
-
-  printf("\t\tpop iteration %d\n",i);
-  push_back(&head, currentPCB); 
-
-  print(&head);
-
-
-}
-
-//  printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
+//for(int i = 0; i < 10 ; i ++)
+//{
+////currentPCB = pop_back(&head, 0);
+//currentPCB = pop(&head, i);
+//
+//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+//   printf("pid            %d\n "  ,currentPCB->process->pid         );
+//   printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
+//   printf("burst_time     %d\n "  ,currentPCB->process->burst_time  );
+//   printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
+//
+//  printf("\t\tpop iteration %d\n",i);
+//  push_back(&head, currentPCB); 
+//
 //  print(&head);
+//
+//
+//}
+//
+////  printf("~~~~~~~~~~~~~~~~~~~~~~~sdsd~~~~~~~~~~~~~~~~~~~~~\n ");
+////  print(&head);
+//
+
+FCFS(head);
 
 return 0;
  
