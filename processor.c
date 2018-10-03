@@ -25,23 +25,33 @@ nodePtr read_in_file(FILE* file, nodePtr head){
   while (!feof (file)){
     fscanf (file, "%d", &index);    
     currentPCB->process->pid = index;
-  
     fscanf (file, "%d", &index);    
     currentPCB->process->arrival_time = index;
-  
     fscanf (file, "%d", &index);    
-    currentPCB->process->burst_time = index;
-  
+    currentPCB->process->burst_time = index; 
     if (currentPCB->process->pid == 0){return head;}  
     push_back(&head, currentPCB);
-
   }
-
   return head;
-
 }
 
+int getTime(nodePtr head)
+{
+  int sum = 0;
+  nodePtr curPtr = head;
+//  sum += curPtr->process->burst_time;
+//  printf("%d\n",  curPtr->process->burst_time);
+  while (curPtr->next != NULL)
+  {
+   sum += curPtr->process->burst_time;
+  // printf("%d\n",  curPtr->process->burst_time);
+   curPtr = curPtr->next;
+  // printf("\t\t%d\n",  curPtr->process->burst_time);
+  }
 
+return sum; 
+
+}
 
 
 void FCFS(nodePtr head) //; nodePtr RunningQueue)
@@ -51,12 +61,32 @@ void FCFS(nodePtr head) //; nodePtr RunningQueue)
   nodePtr currentPCB = calloc(1, sizeof(struct node));
   currentPCB->process = calloc(1, sizeof(struct pcb_t));
 
+  int stop = getTime(head);
+  //start loop early
+  int timeRemaining = 0;
+//  currentPCB = pop(&head, curPcbVal);
+  while (time < stop )
+  {
+// sum up all burst times and decremet till then ??
+// loop linked list and wait until we see duplocate pid
 
-  //while (true)
-  //{
-//if (currentPCB->process)        
-currentPCB = pop(&head, curPcbVal);
+//  if (time >=currentPCB->process->){ // pop new process of of ready queue      
+//  currentPCB = pop(&head, curPcbVal);
+//  }
 
+  if (timeRemaining == 0){ // pop new process of of ready queue      
+    if (currentPCB->process->pid != 0)    
+    { push_back(&head, currentPCB);}
+
+    currentPCB = pop(&head, curPcbVal);
+  //timeRemaining = time + currentPCB->process->burst_time;
+    timeRemaining =  currentPCB->process->burst_time;
+  }
+
+   printf("Time Remaining: %d\n\n",timeRemaining);
+
+
+   printf("~~~~~~~~~~~~~~~~~~~~~~~ time %d~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ", time);
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
    printf("pid            %d\n "  ,currentPCB->process->pid         );
    printf("arrival_time   %d\n "  ,currentPCB->process->arrival_time);
@@ -68,12 +98,15 @@ currentPCB = pop(&head, curPcbVal);
    printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n ");
 
+  time += 1;
+  timeRemaining -= 1;
   //printf("\t\tpop iteration %d\n",i);
   //push_back(&head, currentPCB); 
   
   
-  //}
+  }
   
+  print(&head);
 
 }
 
@@ -102,6 +135,14 @@ nodePtr head = NULL;
 //newNode(&head);
 
 head = (nodePtr) read_in_file( file, head);
+
+
+
+
+int time = getTime( head);
+printf("---->%d\n\n\n", time);
+
+
 
 nodePtr currentPCB = calloc(1, sizeof(struct node));
 currentPCB->process = calloc(1, sizeof(struct pcb_t));
