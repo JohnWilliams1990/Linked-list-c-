@@ -60,8 +60,9 @@ return sum;
 }
 
 
-void FCFS(nodePtr head) //; nodePtr RunningQueue)
+void FCFS(nodePtr header) //; nodePtr RunningQueue)
 {
+nodePtr head = header;
   int time = 0;
   int curPcbVal = 0;
   nodePtr currentPCB = calloc(1, sizeof(struct node));
