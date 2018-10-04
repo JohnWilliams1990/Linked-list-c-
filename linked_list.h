@@ -3,8 +3,8 @@
 
 typedef struct pcb_t {
   int pid;
-  int arrival_time;
-  int burst_time;
+  int arrivalTime;
+  int burstTime;
   
   int finishTime;
   int waitTime;
@@ -17,6 +17,8 @@ typedef struct pcb_t {
   int avgTurnTime;
   int avgRespTime;
   int totContextCount;
+
+  int curRunningTime;
 } pcb,* pcbPtr ;
 
 typedef struct node {
@@ -47,8 +49,8 @@ void push_back( nodePtr * arg, node* item)
     (*arg)->next = NULL;  
     (*arg)->process = calloc(1, sizeof(struct pcb_t));
     (*arg)->process->pid         = item->process->pid         ;
-    (*arg)->process->arrival_time= item->process->arrival_time;
-    (*arg)->process->burst_time  = item->process->burst_time  ;
+    (*arg)->process->arrivalTime= item->process->arrivalTime;
+    (*arg)->process->burstTime  = item->process->burstTime  ;
     (*arg)->process->contextCount = item->process->contextCount;
 
     (*arg)->process->finishTime = item->process->finishTime;
@@ -56,6 +58,7 @@ void push_back( nodePtr * arg, node* item)
     (*arg)->process->turnTime = item->process->turnTime;
     (*arg)->process->respTime = item->process->respTime;
     (*arg)->process->contextCount = item->process->contextCount;
+    (*arg)->process->curRunningTime = item->process->curRunningTime;;
     (*arg)->data = 0;
     return;
   }
@@ -68,8 +71,8 @@ void push_back( nodePtr * arg, node* item)
   curPtr->next = calloc(1, sizeof(struct node));
   curPtr->next->process = calloc(1, sizeof(struct pcb_t));
   curPtr->next->process->pid         = item->process->pid         ;
-  curPtr->next->process->arrival_time= item->process->arrival_time;
-  curPtr->next->process->burst_time  = item->process->burst_time  ;
+  curPtr->next->process->arrivalTime= item->process->arrivalTime;
+  curPtr->next->process->burstTime  = item->process->burstTime  ;
   curPtr->next->process->contextCount = item->process->contextCount;
 
   curPtr->next->process->finishTime = item->process->finishTime;
@@ -77,6 +80,7 @@ void push_back( nodePtr * arg, node* item)
   curPtr->next->process->turnTime = item->process->turnTime;
   curPtr->next->process->respTime = item->process->respTime;
   curPtr->next->process->contextCount = item->process->contextCount;
+    curPtr->next->process->curRunningTime = item->process->curRunningTime;;
   curPtr->next->prev = curPtr;
   curPtr->next->data = counter;
  return;
@@ -171,7 +175,7 @@ printf("\n| %10s | %10s | %10s | %10s | %10s | %10s | %10s |%10s| \n","Process I
  printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
   while (curPtr != NULL)
   {
-printf("| %10d | %10d | %10d | %10d | %10d | %10d | %10d | %10d | \n",curPtr->process->pid, curPtr->process->arrival_time, curPtr->process->burst_time, curPtr->process->finishTime, curPtr->process->waitTime, curPtr->process->turnTime, curPtr->process->respTime, curPtr->process->contextCount);
+printf("| %10d | %10d | %10d | %10d | %10d | %10d | %10d | %10d | \n",curPtr->process->pid, curPtr->process->arrivalTime, curPtr->process->burstTime, curPtr->process->finishTime, curPtr->process->waitTime, curPtr->process->turnTime, curPtr->process->respTime, curPtr->process->contextCount);
    curPtr = curPtr->next;
   }
  printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
