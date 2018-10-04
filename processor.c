@@ -67,9 +67,15 @@ nodePtr RoundRobin(nodePtr header, int quantum)
 	currentPCB = pop(&queue, curPcbVal);
         timeRemaining += quantum;
       }
-
+      // context switch for process here
       else if (currentPCB != NULL && currentPCB->process->pid != 0)    
-      {
+      {  
+         
+printf("\n\ncurrentPCB->process->interWait: %d\n\n", currentPCB->process->interWait);
+         currentPCB->process->interWait = time - currentPCB->process->interWait;
+
+   printf("pid              %d\n"  , currentPCB->process->pid           );
+printf("currentPCB->process->interWait: %d\n\n", currentPCB->process->interWait);
          push_back(&queue, currentPCB);// push back on working queue for current pcb
 	 currentPCB = pop(&queue, curPcbVal); // get next job 
          timeRemaining += quantum; // increment quantum

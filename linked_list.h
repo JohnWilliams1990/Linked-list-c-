@@ -18,6 +18,7 @@ typedef struct pcb_t {
   int avgRespTime;
   int totContextCount;
 
+  int interWait;
   int curRunningTime;
 } pcb,* pcbPtr ;
 
