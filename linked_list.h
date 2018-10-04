@@ -183,5 +183,101 @@ printf("| %10d | %10d | %10d | %10d | %10d | %10d | %10d | %10d | \n",curPtr->pr
 }
 
 
+
+// local funtions
+nodePtr read_in_file(FILE* file, nodePtr head){
+  nodePtr currentPCB = calloc(1, sizeof(struct node));
+  currentPCB->process = calloc(1, sizeof(struct pcb_t));
+  int index = 0;
+
+  while (!feof (file)){
+    index = 0;
+    fscanf (file, "%d", &index);    
+    currentPCB->process->pid = index;
+    fscanf (file, "%d", &index);    
+    currentPCB->process->arrivalTime = index;
+    fscanf (file, "%d", &index);    
+    currentPCB->process->burstTime = index; 
+    if (currentPCB->process->pid == 0){return head;}  
+    push_back(&head, currentPCB);
+    //print(&head);
+  }
+  return head;
+}
+
+int getTime(nodePtr head)
+{
+  int sum = 0;
+  nodePtr curPtr = head;
+  while (curPtr != NULL)
+  {
+    sum += curPtr->process->burstTime;
+    curPtr = curPtr->next;
+  }
+  return sum; 
+}
+
+
+int count(nodePtr head)
+{
+  int sum = 0;
+  nodePtr curPtr = head;
+  while (curPtr != NULL)
+  {
+    sum += 1;
+    curPtr = curPtr->next;
+  }
+  return sum; 
+}
+
+nodePtr FCFS(nodePtr header)
+{
+  nodePtr head = header;
+  int time = 0;
+  int curPcbVal = 0;
+  nodePtr currentPCB = NULL;//tmp pointer for item in queue
+  int stop = getTime(head);
+  
+  int timeRemaining = 0;
+
+  while (time < stop )
+  {
+    if (timeRemaining == 0){ // pop new process of of ready queue      
+      if (currentPCB != NULL && currentPCB->process->pid != 0)    
+      { push_back(&head, currentPCB);}
+     
+      currentPCB = pop(&head, curPcbVal);
+      timeRemaining =  currentPCB->process->burstTime;
+      currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+    }
+
+  // printf("Time Remaining: %d\n\n",timeRemaining);
+  // printf("---------------------- time %d-----------------------------\n ", time);
+  // printf("-----------------------------------------------------------\n ");
+  // printf("pid            %d\n "  ,currentPCB->process->pid         );
+  // printf("arrivalTime   %d\n "  ,currentPCB->process->arrivalTime);
+  // printf("burst_time     %d\n "  ,currentPCB->process->burstTime  );
+  // printf("finishTime     %d\n "  ,currentPCB->process->finishTime  );
+  // printf("waitTime       %d\n "  ,currentPCB->process->waitTime    );
+  // printf("turnTime       %d\n "  ,currentPCB->process->turnTime    );
+  // printf("respTime       %d\n "  ,currentPCB->process->respTime    );
+  // printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
+  // printf("-----------------------------------------------------------\n ");
+
+    time += 1;
+    timeRemaining -= 1;
+    
+    if (timeRemaining == 0){ // do calculations for process     
+      currentPCB->process->finishTime = time ;
+      currentPCB->process->turnTime = currentPCB->process->finishTime - currentPCB->process->arrivalTime;
+      currentPCB->process->respTime = currentPCB->process->waitTime;
+    }
+  } 
+  push_back(&head, currentPCB); 
+  return head;
+}
+
+
+
 #endif
 
