@@ -1,6 +1,8 @@
 #ifndef NODE
 #define NODE
 
+#include<stdbool.h>
+
 typedef struct pcb_t {
   int pid;
   int arrivalTime;
@@ -18,8 +20,11 @@ typedef struct pcb_t {
   int avgRespTime;
   int totContextCount;
 
-  int interWait;
+  int timeMarker;
+  int firstRun;
+  bool ran;
   int curRunningTime;
+
 } pcb,* pcbPtr ;
 
 typedef struct node {
@@ -49,9 +54,9 @@ void push_back( nodePtr * arg, node* item)
     (*arg)->prev = NULL;
     (*arg)->next = NULL;  
     (*arg)->process = calloc(1, sizeof(struct pcb_t));
-    (*arg)->process->pid         = item->process->pid         ;
+    (*arg)->process->pid = item->process->pid;
     (*arg)->process->arrivalTime= item->process->arrivalTime;
-    (*arg)->process->burstTime  = item->process->burstTime  ;
+    (*arg)->process->burstTime = item->process->burstTime  ;
     (*arg)->process->contextCount = item->process->contextCount;
 
     (*arg)->process->finishTime = item->process->finishTime;
@@ -59,7 +64,11 @@ void push_back( nodePtr * arg, node* item)
     (*arg)->process->turnTime = item->process->turnTime;
     (*arg)->process->respTime = item->process->respTime;
     (*arg)->process->contextCount = item->process->contextCount;
-    (*arg)->process->curRunningTime = item->process->curRunningTime;;
+    (*arg)->process->curRunningTime = item->process->curRunningTime;
+    (*arg)->process->firstRun = item->process->firstRun;
+    (*arg)->process->timeMarker = item->process->timeMarker;
+    (*arg)->process->ran = item->process->ran;
+
     (*arg)->data = 0;
     return;
   }
@@ -81,7 +90,11 @@ void push_back( nodePtr * arg, node* item)
   curPtr->next->process->turnTime = item->process->turnTime;
   curPtr->next->process->respTime = item->process->respTime;
   curPtr->next->process->contextCount = item->process->contextCount;
-    curPtr->next->process->curRunningTime = item->process->curRunningTime;;
+  curPtr->next->process->curRunningTime = item->process->curRunningTime;;
+   
+  curPtr->next->process->firstRun = item->process->firstRun;
+  curPtr->next->process->timeMarker = item->process->timeMarker;
+  curPtr->next->process->ran = item->process->ran;
   curPtr->next->prev = curPtr;
   curPtr->next->data = counter;
  return;
