@@ -42,6 +42,7 @@ void freeNode(nodePtr * arg) {
 }
 
 
+
 // push element to back of list
 void push_back( nodePtr * arg, node* item)
 {
@@ -115,11 +116,7 @@ nodePtr pop( nodePtr * arg, int index)
   if ((*arg) == NULL)
   {
     printf("HERE\n\n");
-
-	//curPtr->next = NULL;
-	//curPtr->prev = NULL;
-	return curPtr;
-
+    return curPtr;
   }
   
   while (curPtr->next != NULL && counter < index)
@@ -145,8 +142,6 @@ nodePtr pop( nodePtr * arg, int index)
   {
     curPtr->next->prev = prev;
   }
-  //curPtr->next = NULL;
-  //curPtr->prev = NULL;
     return curPtr; 
 }
 
@@ -252,7 +247,6 @@ nodePtr FCFS(nodePtr header)
   int curPcbVal = 0;
   nodePtr currentPCB = NULL;//tmp pointer for item in queue
   int stop = getTime(head);
-  
   int timeRemaining = 0;
 
   while (time < stop )
@@ -265,20 +259,6 @@ nodePtr FCFS(nodePtr header)
       timeRemaining =  currentPCB->process->burstTime;
       currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
     }
-
-  // printf("Time Remaining: %d\n\n",timeRemaining);
-  // printf("---------------------- time %d-----------------------------\n ", time);
-  // printf("-----------------------------------------------------------\n ");
-  // printf("pid            %d\n "  ,currentPCB->process->pid         );
-  // printf("arrivalTime   %d\n "  ,currentPCB->process->arrivalTime);
-  // printf("burst_time     %d\n "  ,currentPCB->process->burstTime  );
-  // printf("finishTime     %d\n "  ,currentPCB->process->finishTime  );
-  // printf("waitTime       %d\n "  ,currentPCB->process->waitTime    );
-  // printf("turnTime       %d\n "  ,currentPCB->process->turnTime    );
-  // printf("respTime       %d\n "  ,currentPCB->process->respTime    );
-  // printf("contextCount   %d\n\n ",currentPCB->process->contextCount);
-  // printf("-----------------------------------------------------------\n ");
-
     time += 1;
     timeRemaining -= 1;
     
@@ -293,6 +273,170 @@ nodePtr FCFS(nodePtr header)
 }
 
 
+nodePtr RoundRobin(nodePtr header, int quantum)
+{
+  nodePtr head = header;
+  int time = 0;
+  int curPcbVal = 0;
+  nodePtr currentPCB = NULL;
+  nodePtr tmpPCB = NULL;
+  int stop = getTime(head); 
+  int processes = count(head);
+  int remainingProcesses = 0;
+  int timeRemaining = 0;
+  int timeMarker = 0;
+  nodePtr queue = NULL;
+  while (time <= stop)
+  {
+    if (head != NULL && remainingProcesses != processes && time >=  head->process->arrivalTime) {
+
+      tmpPCB = pop(&head, curPcbVal);
+      push_back(&queue, tmpPCB);
+      remainingProcesses += 1;
+    } 
+    if (timeRemaining == 0 || currentPCB->process->curRunningTime == currentPCB->process->burstTime ){ // pop new process of of ready queue      
+      if (currentPCB != NULL)
+      {
+          if (currentPCB->process->ran == 0)
+          {
+            currentPCB->process->waitTime = currentPCB->process->firstRun - currentPCB->process->arrivalTime -1;
+            currentPCB->process->timeMarker = time;
+            currentPCB->process->ran = 1;
+          }
+      
+          else if (currentPCB->process->ran == 1)
+          {
+             currentPCB->process->waitTime += (currentPCB->process->firstRun - currentPCB->process->timeMarker - 1);
+             currentPCB->process->timeMarker = time;
+          }
+
+    currentPCB->process->contextCount += 1;
+      }
+
+      if(currentPCB != NULL && currentPCB->process->curRunningTime == currentPCB->process->burstTime)
+      { //process is finished 
+        currentPCB->process->finishTime = time;
+        currentPCB->process->turnTime = currentPCB->process->finishTime - currentPCB->process->arrivalTime;
+
+        if (time == stop) {break; }
+        push_back(&head, currentPCB); 
+       	// if this has taken place then currentPCB is in inconsistent State so refresh it. 
+	currentPCB = pop(&queue, curPcbVal);
+      }
+      // context switch for process here
+      else if (currentPCB != NULL && currentPCB->process->pid != 0)    
+      { 
+        push_back(&queue, currentPCB);// push back on working queue for current pcb
+	currentPCB = pop(&queue, curPcbVal); // get next job 
+      } 
+
+      else 
+      { // via logical deduction the only thing remaining is empty / null currentPCB
+	 currentPCB = pop(&queue, curPcbVal); // get next job 
+      }   
+      timeRemaining = quantum; // increment quantum
+      currentPCB->process->firstRun = time + 1;
+      if (currentPCB->process->curRunningTime == 0)
+      {
+        currentPCB->process->respTime = time - currentPCB->process->arrivalTime;
+      }
+
+    }
+    time += 1;
+    timeRemaining -= 1;
+    currentPCB->process->curRunningTime +=1;    
+
+
+  } 
+  push_back(&head, currentPCB); 
+  return head;
+}
+
+
+
+void push( nodePtr * arg, node* item, int index)
+{
+  int counter = 0;
+  nodePtr curPtr = (*arg);
+  nodePtr tmpPtr = NULL;
+
+
+  if ( curPtr == NULL)
+  {
+    (*arg) = calloc(1, sizeof( node));
+    (*arg)->prev = NULL;
+    (*arg)->next = NULL;  
+    (*arg)->process = calloc(1, sizeof(struct pcb_t));
+    (*arg)->process->pid = item->process->pid;
+    (*arg)->process->arrivalTime= item->process->arrivalTime;
+    (*arg)->process->burstTime = item->process->burstTime  ;
+    (*arg)->process->contextCount = item->process->contextCount;
+    (*arg)->process->finishTime = item->process->finishTime;
+    (*arg)->process->waitTime = item->process->waitTime;
+    (*arg)->process->turnTime = item->process->turnTime;
+    (*arg)->process->respTime = item->process->respTime;
+    (*arg)->process->contextCount = item->process->contextCount;
+    (*arg)->process->curRunningTime = item->process->curRunningTime;
+    (*arg)->process->firstRun = item->process->firstRun;
+    (*arg)->process->timeMarker = item->process->timeMarker;
+    (*arg)->process->ran = item->process->ran;
+    (*arg)->data = 0;
+  }
+    return;
+
+  while (counter < index && curPtr->next != NULL)
+  {
+     curPtr = curPtr->next;
+     counter += 1;
+  }
+
+// grab item before overwriting it
+  tmpPtr = curPtr->next;
+  
+  
+
+  curPtr->next = calloc(1, sizeof(struct node));
+  curPtr->next->process = calloc(1, sizeof(struct pcb_t));
+  curPtr->next->process->pid         = item->process->pid         ;
+  curPtr->next->process->arrivalTime= item->process->arrivalTime;
+  curPtr->next->process->burstTime  = item->process->burstTime  ;
+  curPtr->next->process->contextCount = item->process->contextCount;
+
+  curPtr->next->process->finishTime = item->process->finishTime;
+  curPtr->next->process->waitTime = item->process->waitTime;
+  curPtr->next->process->turnTime = item->process->turnTime;
+  curPtr->next->process->respTime = item->process->respTime;
+  curPtr->next->process->contextCount = item->process->contextCount;
+  curPtr->next->process->curRunningTime = item->process->curRunningTime;;
+   
+  curPtr->next->process->firstRun = item->process->firstRun;
+  curPtr->next->process->timeMarker = item->process->timeMarker;
+  curPtr->next->process->ran = item->process->ran;
+  curPtr->next->prev = curPtr;
+  curPtr->next->data = counter;
+ 
+curPtr = curPtr->next;
+curPtr->next = tmpPtr; 
+tmpPtr->prev = curPtr; 
+
+
+return;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif
+
+
 
