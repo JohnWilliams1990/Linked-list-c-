@@ -4,6 +4,103 @@
 #include "linked_list.h"
 
 
+// pop elememt from list at specif index
+nodePtr popPid( nodePtr * arg, int index)
+{
+
+  node tmp;
+  int counter = 0;
+  nodePtr curPtr = (*arg);
+  nodePtr prev = (*arg)->prev;
+
+  if ((*arg) == NULL)
+  {
+    printf("HERE\n\n");
+    return curPtr;
+  }
+  
+  while (curPtr->next != NULL && curPtr->process->pid !=  index)
+  {
+    prev = curPtr;
+    curPtr = curPtr->next;
+    counter +=1;
+  }
+  if(prev != NULL) 
+  {
+    prev->next = curPtr->next;
+  }
+  else
+  { // we are at head of list to pop front
+    (*arg) = (*arg)->next;
+    if ((*arg) != NULL) 
+    { 
+      (*arg)->prev = curPtr->prev;
+    }
+  }
+
+  if (curPtr->next != NULL)
+  {
+    curPtr->next->prev = prev;
+  }
+    return curPtr; 
+}
+
+nodePtr sort(nodePtr header)
+{
+
+  nodePtr head = header;
+
+  if( head == NULL) {exit(0);}
+
+  nodePtr next = header->next;
+  nodePtr tmp = NULL;
+
+  bool swap = false;
+  int index = 0;
+  int processes = count(head);
+
+
+do {
+  print(&head);
+    swap = false;
+
+	header = head;
+	if (next->next != NULL)
+	{
+		next = next->next;
+	}
+	else
+	{
+		next = head;
+	}
+
+
+
+	while (header->next != NULL)
+    {
+      printf("%d > %d \n",header->process->pid , next->process->pid );
+      if (header->process->pid > next->process->pid )
+      {
+
+        index = header->process->pid;
+      printf("index %d  \n",index );
+//        tmp = pop(&head,index);
+tmp = popPid( &head, index);
+
+        push(&head,tmp,index);
+// head means of pushing finto struct        
+     	header = next;
+        next = tmp; 
+        swap = true; 
+        printf("swap %d > %d\n", header->process->pid , next->process->pid );
+      }
+      header = header->next;
+    } 
+
+  print(&head);
+//break;
+  } while(true);
+}
 
 nodePtr SJF(nodePtr header)
 {
@@ -43,44 +140,6 @@ nodePtr SJF(nodePtr header)
 
 
 
-
-nodePtr sort(nodePtr header)
-{
-
-  nodePtr head = header;
-  int processes = count(head);
-
-  if( head == NULL) {exit(0);}
-
-  nodePtr next = header->next;
-  nodePtr tmp = NULL;
-
-bool swap = false;
-int index = 0;
-do {
-  print(&head);
-    swap = false;
-    while (header->next != NULL)
-    {
-      printf("%d > %d \n",header->process->pid , next->process->pid );
-      if (header->process->pid > next->process->pid )
-      {
-		  index = header->process->pid;
-        tmp = pop(&head,index);
-        push(&head,next,index);
-// head means of pushing finto struct        
-	header = next;
-        next = tmp; 
-        swap = true; 
-        printf("swap %d > %d\n", header->process->pid , next->process->pid );
-      }
-      header = header->next;
-      next = next->next;
-    } 
-
-break;
-  } while(true);
-}
 
 
 

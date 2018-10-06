@@ -382,7 +382,6 @@ void push( nodePtr * arg, node* item, int index)
     (*arg)->process->ran = item->process->ran;
     (*arg)->data = 0;
   }
-    return;
 
   while (counter < index && curPtr->next != NULL)
   {
@@ -417,8 +416,11 @@ void push( nodePtr * arg, node* item, int index)
  
 curPtr = curPtr->next;
 curPtr->next = tmpPtr; 
-tmpPtr->prev = curPtr; 
 
+if (curPtr->next != NULL)
+{
+	curPtr->next->prev = curPtr;
+}
 
 return;
 
