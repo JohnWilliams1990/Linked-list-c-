@@ -5,4 +5,7 @@
 #  Program: gat.sh
 
 
-echo $@
+echo "git add * ; git commit -m '$@' ; git pull origin pcb ; git push origin pcb"
+git add * ; git commit -m '$@' ; git pull origin pcb ; git push origin pcb
+
+
