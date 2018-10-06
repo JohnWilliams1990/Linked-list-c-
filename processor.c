@@ -83,7 +83,7 @@ nodePtr RoundRobin(nodePtr header, int quantum)
         
             else if (currentPCB->process->ran == 1)
             {
-               currentPCB->process->waitTime += (time - currentPCB->process->timeMarker - 1);
+               currentPCB->process->waitTime += (currentPCB->process->firstRun - currentPCB->process->timeMarker - 1);
                currentPCB->process->timeMarker = time;
             //  printf("----------------------------------------------------------%d-----------%d----\n", currentPCB->process->pid, currentPCB->process->waitTime);
             }
