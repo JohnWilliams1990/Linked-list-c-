@@ -18,15 +18,6 @@
 // made the linked list pop_back return item. 
 // try to push item back into queue. --> make sure that we can do it curcularly and make sure push takes in a PCB correctly
 
-
-
-
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
 nodePtr RoundRobin(nodePtr header, int quantum)
 {
   nodePtr head = header;
@@ -40,30 +31,52 @@ nodePtr RoundRobin(nodePtr header, int quantum)
   int timeRemaining = 0;
   int timeMarker = 0;
   nodePtr queue = NULL;
+
+
+
   while (time <= stop)
   {
-
+    // currentPCB may be empty here
 
     // take task from operational STORAGE queue if applicable 
     // adjuest queues if head if line process has arived
 
     //ARRIVAL 
+//    if (( head != NULL && remainingProcesses != processes && time >=  head->process->arrivalTime && timeRemaining != 0) || queue == NULL &&  remainingProcesses != processes) {
+//
+//      tmpPCB = pop(&head, curPcbVal);
+//      push_back(&queue, tmpPCB);
+//      remainingProcesses += 1;
+//      print(&queue);
+//
+//    } 
+
     if (head != NULL && remainingProcesses != processes && time >=  head->process->arrivalTime) {
+
       tmpPCB = pop(&head, curPcbVal);
       push_back(&queue, tmpPCB);
       remainingProcesses += 1;
-      print(&queue);
+//      print(&queue);
+
     } 
-    if (timeRemaining == 0 || currentPCB->process->curRunningTime == currentPCB->process->burstTime){ // pop new process of of ready queue      
+
+    
+
+    if (currentPCB != NULL && currentPCB->process->burstTime < quantum && currentPCB->process->curRunningTime == currentPCB->process->burstTime ) {
+      printf("HERE witn pid:%d\n\n", currentPCB->process->pid);
+
+    }
+
+    if (timeRemaining == 0 || currentPCB->process->curRunningTime == currentPCB->process->burstTime ){ // pop new process of of ready queue      
 
         if (currentPCB != NULL)
         {
             if (currentPCB->process->ran == 0)
             {
               // get first waiting time for calculation 
-              currentPCB->process->firstRun = time;
-              currentPCB->process->waitTime = time - currentPCB->process->arrivalTime -1;
-              printf("---$$$$$--------------------------------------------------%d-----------%d----\n",currentPCB->process->pid, currentPCB->process->waitTime);
+		// currentPCB->process->firstRun = time;
+              currentPCB->process->waitTime = currentPCB->process->firstRun - currentPCB->process->arrivalTime -1;
+              //printf("---$$$$$--------------------------------------------------%d-----------%d----\n",currentPCB->process->pid, currentPCB->process->waitTime);
               currentPCB->process->timeMarker = time;
         	currentPCB->process->ran = 1;
             }
@@ -72,53 +85,56 @@ nodePtr RoundRobin(nodePtr header, int quantum)
             {
                currentPCB->process->waitTime += (time - currentPCB->process->timeMarker - 1);
                currentPCB->process->timeMarker = time;
-              printf("----------------------------------------------------------%d-----------%d----\n", currentPCB->process->pid, currentPCB->process->waitTime);
+            //  printf("----------------------------------------------------------%d-----------%d----\n", currentPCB->process->pid, currentPCB->process->waitTime);
             }
         }
 
       if(currentPCB != NULL && currentPCB->process->curRunningTime == currentPCB->process->burstTime)
       { 
          // take the item off the running queue and put back onto storage queue
-        printf("~~~~~~~~~~~~~~~>>>>>\aTask %d finished at time %d<<<<<<<<<<\n\n",  currentPCB->process->pid, time);
+        //printf("~~~~~~~~~~~~~~~>>>>>\aTask %d finished at time %d<<<<<<<<<<\n\n",  currentPCB->process->pid, time);
 
+
+		//process is finished 
         currentPCB->process->finishTime = time;
-        
 
         if (time == stop) {break; }
         push_back(&head, currentPCB); 
-        // if this has taken place then currentPCB is in inconsistent State so refresh it. 
-//        print(&queue);
+       		 // if this has taken place then currentPCB is in inconsistent State so refresh it. 
         
 
 	currentPCB = pop(&queue, curPcbVal);
-        timeRemaining += quantum;
       }
       // context switch for process here
       else if (currentPCB != NULL && currentPCB->process->pid != 0)    
-      {  
+      { 
+ 
+        printf("~~~~~~~~~~~~~~~>>>>>Context Switch @ time %d <<<<<<<<<<\n\n",  time);
          push_back(&queue, currentPCB);// push back on working queue for current pcb
 	 currentPCB = pop(&queue, curPcbVal); // get next job 
-         timeRemaining += quantum; // increment quantum
       } 
 
       else 
       { // via logical deduction the only thing remaining is empty / null currentPCB
 	 currentPCB = pop(&queue, curPcbVal); // get next job 
-         timeRemaining += quantum; // increment quantum
       }   
+         timeRemaining = quantum; // increment quantum
+currentPCB->process->firstRun = time + 1;
+
     }
+			//  // //printf("Time Remaining:  %d\n\n" , timeRemaining                      );
+			   //printf("pid              %d\n"  , currentPCB->process->pid           );
+			//printf("currentPCB->process->waitTime: %d\n", currentPCB->process->waitTime);
+			//
 
-//  // //printf("Time Remaining:  %d\n\n" , timeRemaining                      );
-//   printf("pid              %d\n"  , currentPCB->process->pid           );
-//printf("currentPCB->process->waitTime: %d\n", currentPCB->process->waitTime);
-//      //print(&queue);
-//
-
+      //print(&queue);
+//currentPCB->process->timeMarker = time;
     time += 1;
     timeRemaining -= 1;
     currentPCB->process->curRunningTime +=1;    
 
   printf("---------------------- time %d-----------------------------\n", time);
+   printf("pid              %d\n"  , currentPCB->process->pid           );
 //    if (currentPCB->process->waitTime == 0)
 
 //    if (currentPCB->process->firstRun == 0)
@@ -164,8 +180,15 @@ int main(int argc, char *argv[])
 int x = count(head);
 printf("#########%d\n",x);
 
+int quantum = 4;
+
+  head = RoundRobin(head, quantum);
+
+
+
+
   //head = RoundRobin(head, 1);
-  head = RoundRobin(head, 4);
+ // head = RoundRobin(head, 4);
   print(&head);
   return 0;
   
