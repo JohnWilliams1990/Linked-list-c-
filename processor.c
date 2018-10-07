@@ -45,6 +45,7 @@ nodePtr popPid( nodePtr * arg, int index)
     return curPtr; 
 }
 
+/*
 nodePtr sort(nodePtr header)
 {
 
@@ -61,18 +62,11 @@ nodePtr sort(nodePtr header)
 
 
 do {
-  print(&head);
+
     swap = false;
 
 	header = head;
-	if (next->next != NULL)
-	{
-		next = next->next;
-	}
-	else
-	{
-		next = head;
-	}
+	
 
 
 
@@ -83,24 +77,64 @@ do {
       {
 
         index = header->process->pid;
-      printf("index %d  \n",index );
+      printf("\tindex %d  \n",index );
 //        tmp = pop(&head,index);
+	  printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 tmp = popPid( &head, index);
-
+print(&head);
         push(&head,tmp,index);
+		print(&head);
+		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 // head means of pushing finto struct        
      	header = next;
         next = tmp; 
         swap = true; 
-        printf("swap %d > %d\n", header->process->pid , next->process->pid );
+        printf("\tswap %d > %d\n", header->process->pid , next->process->pid );
+		
       }
       header = header->next;
     } 
-
+	if (next->next != NULL)
+	{
+		next = next->next;
+	}
+	else
+	{
+		next = head;
+	}
   print(&head);
 //break;
-  } while(true);
+  } while(swap == true);
 }
+*/
+
+nodePtr sort(nodePtr header) {
+
+	nodePtr tmp = NULL;
+	nodePtr head = header;
+
+	int processes = count(head);
+
+	for (int i = 1; i < processes; i++)
+	{
+		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		tmp = popPid(&head, i);
+		print(&head);
+		push(&head, tmp, i);
+		print(&head);
+		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+	}
+
+	return head;
+
+}
+
+
+
+
+
+
 
 nodePtr SJF(nodePtr header)
 {
@@ -157,24 +191,25 @@ int main(int argc, char *argv[])
 
   FILE* file;
   //file = fopen (argv[1], "r");
-  file = fopen ("input5", "r");
+  //file = fopen ("input5", "r");
+  //file = fopen ("inputHW", "r");
   //file = fopen ("input10", "r");
-  //file = fopen ("input100", "r");
+  file = fopen ("input100", "r");
   nodePtr head = NULL;
   head = (nodePtr) read_in_file( file, head);
 
-//  head = FCFS(head);
-//  print(&head);
+  printf("~~~~~~~~~~>>>>FCFS\n");
+  head = FCFS(head);
+  print(&head);
 
-  int x = count(head);
-  printf("#########%d\n",x);
 
 
 //  head =  SJF(head);
 //  print(&head);
 
 
-  int quantum = 1;
+  int quantum = 4;
+  printf("~~~~~~~~~~>>>>Round robin with quantum of size: %d\n",quantum);
   head = RoundRobin(head, quantum);
   print(&head);
 

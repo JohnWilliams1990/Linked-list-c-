@@ -356,7 +356,7 @@ nodePtr RoundRobin(nodePtr header, int quantum)
 
 void push( nodePtr * arg, node* item, int index)
 {
-  int counter = 0;
+  int counter = 1;
   nodePtr curPtr = (*arg);
   nodePtr tmpPtr = NULL;
 
@@ -383,7 +383,7 @@ void push( nodePtr * arg, node* item, int index)
     (*arg)->data = 0;
   }
 
-  while (counter < index && curPtr->next != NULL)
+  while (counter < index - 1 && curPtr->next != NULL)
   {
      curPtr = curPtr->next;
      counter += 1;
@@ -392,7 +392,34 @@ void push( nodePtr * arg, node* item, int index)
 // grab item before overwriting it
   tmpPtr = curPtr->next;
   
-  
+  if (index == 1)
+  {
+
+printf("asdasdasdsadsadasdasdasdsad\n\n\n");
+
+//  tmpPtr= calloc(1, sizeof( node));
+//  tmpPtr->prev = NULL;
+//  tmpPtr->next = NULL;
+//  tmpPtr->process = calloc(1, sizeof(struct pcb_t));
+//  tmpPtr->process->pid = item->process->pid;
+//  tmpPtr->process->arrivalTime= item->process->arrivalTime;
+//  tmpPtr->process->burstTime = item->process->burstTime  ;
+//  tmpPtr->process->contextCount = item->process->contextCount;
+//  tmpPtr->process->finishTime = item->process->finishTime;
+//  tmpPtr->process->waitTime = item->process->waitTime;
+//  tmpPtr->process->turnTime = item->process->turnTime;
+//  tmpPtr->process->respTime = item->process->respTime;
+//  tmpPtr->process->contextCount = item->process->contextCount;
+//  tmpPtr->process->curRunningTime = item->process->curRunningTime;
+//  tmpPtr->process->firstRun = item->process->firstRun;
+//  tmpPtr->process->timeMarker = item->process->timeMarker;
+//  tmpPtr->process->ran = item->process->ran;
+//  tmpPtr->data = 0;
+//
+
+
+
+  }
 
   curPtr->next = calloc(1, sizeof(struct node));
   curPtr->next->process = calloc(1, sizeof(struct pcb_t));
@@ -421,6 +448,9 @@ if (curPtr->next != NULL)
 {
 	curPtr->next->prev = curPtr;
 }
+
+
+
 
 return;
 
