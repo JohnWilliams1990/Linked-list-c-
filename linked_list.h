@@ -354,7 +354,7 @@ nodePtr RoundRobin(nodePtr header, int quantum)
 
 
 
-void push( nodePtr * arg, node* item, int index)
+nodePtr push( nodePtr * arg, node* item, int index)
 {
   int counter = 1;
   nodePtr curPtr = (*arg);
@@ -389,37 +389,47 @@ void push( nodePtr * arg, node* item, int index)
      counter += 1;
   }
 
-// grab item before overwriting it
-  tmpPtr = curPtr->next;
-  
   if (index == 1)
   {
 
-printf("asdasdasdsadsadasdasdasdsad\n\n\n");
+    printf("asdasdasdsadsadasdasdasdsad\n\n\n");
+  
+    tmpPtr= calloc(1, sizeof( node));
+    tmpPtr->prev = NULL;
+    tmpPtr->next = NULL;
+    tmpPtr->process = calloc(1, sizeof(struct pcb_t));
+    tmpPtr->process->pid = item->process->pid;
+    tmpPtr->process->arrivalTime= item->process->arrivalTime;
+    tmpPtr->process->burstTime = item->process->burstTime  ;
+    tmpPtr->process->contextCount = item->process->contextCount;
+    tmpPtr->process->finishTime = item->process->finishTime;
+    tmpPtr->process->waitTime = item->process->waitTime;
+    tmpPtr->process->turnTime = item->process->turnTime;
+    tmpPtr->process->respTime = item->process->respTime;
+    tmpPtr->process->contextCount = item->process->contextCount;
+    tmpPtr->process->curRunningTime = item->process->curRunningTime;
+    tmpPtr->process->firstRun = item->process->firstRun;
+    tmpPtr->process->timeMarker = item->process->timeMarker;
+    tmpPtr->process->ran = item->process->ran;
+    tmpPtr->data = 0;
 
-//  tmpPtr= calloc(1, sizeof( node));
-//  tmpPtr->prev = NULL;
-//  tmpPtr->next = NULL;
-//  tmpPtr->process = calloc(1, sizeof(struct pcb_t));
-//  tmpPtr->process->pid = item->process->pid;
-//  tmpPtr->process->arrivalTime= item->process->arrivalTime;
-//  tmpPtr->process->burstTime = item->process->burstTime  ;
-//  tmpPtr->process->contextCount = item->process->contextCount;
-//  tmpPtr->process->finishTime = item->process->finishTime;
-//  tmpPtr->process->waitTime = item->process->waitTime;
-//  tmpPtr->process->turnTime = item->process->turnTime;
-//  tmpPtr->process->respTime = item->process->respTime;
-//  tmpPtr->process->contextCount = item->process->contextCount;
-//  tmpPtr->process->curRunningTime = item->process->curRunningTime;
-//  tmpPtr->process->firstRun = item->process->firstRun;
-//  tmpPtr->process->timeMarker = item->process->timeMarker;
-//  tmpPtr->process->ran = item->process->ran;
-//  tmpPtr->data = 0;
-//
+    tmpPtr->prev = NULL;
+    tmpPtr->next = curPtr;
+    
+    if (curPtr->prev != NULL)
+    {
+      curPtr->prev = tmpPtr;
+    }
 
-
-
+    return tmpPtr;
   }
+
+
+else {
+
+// grab item before overwriting it
+  tmpPtr = curPtr->next;
+  
 
   curPtr->next = calloc(1, sizeof(struct node));
   curPtr->next->process = calloc(1, sizeof(struct pcb_t));
@@ -441,18 +451,18 @@ printf("asdasdasdsadsadasdasdasdsad\n\n\n");
   curPtr->next->prev = curPtr;
   curPtr->next->data = counter;
  
-curPtr = curPtr->next;
-curPtr->next = tmpPtr; 
-
-if (curPtr->next != NULL)
-{
-	curPtr->next->prev = curPtr;
+  curPtr = curPtr->next;
+  curPtr->next = tmpPtr; 
+  
+  if (curPtr->next != NULL)
+  {
+    curPtr->next->prev = curPtr;
+  }
 }
 
 
 
-
-return;
+return (*arg);
 
 }
 

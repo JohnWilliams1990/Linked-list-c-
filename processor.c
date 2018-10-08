@@ -120,7 +120,7 @@ nodePtr sort(nodePtr header) {
 		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		tmp = popPid(&head, i);
 		print(&head);
-		push(&head, tmp, i);
+		head = push(&head, tmp, i);
 		print(&head);
 		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 //  print(&head);
 
 
-  int quantum = 4;
+  int quantum = 1;
   printf("~~~~~~~~~~>>>>Round robin with quantum of size: %d\n",quantum);
   head = RoundRobin(head, quantum);
   print(&head);
