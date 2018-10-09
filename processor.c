@@ -22,7 +22,10 @@ int least(nodePtr head)
   }
   return pid; 
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 60815ad37796d07a3b22ecfd96e28bffc2b44f17
 
 
 
@@ -88,6 +91,11 @@ nodePtr SJF(nodePtr header)
 
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 60815ad37796d07a3b22ecfd96e28bffc2b44f17
 int main(int argc, char *argv[])
 {
 
@@ -138,9 +146,94 @@ int main(int argc, char *argv[])
   print(&head);
   head =  SJF(head);
   print(&head);
+<<<<<<< HEAD
 //  print(&head);
 
+=======
+
+
+
+for(int i = 0; i < 100; i++)
+{
+int x = least(head); 
+printf("%d\n", x);
+pop(&head,x);
+
+  print(&head);
+
+}
+
+
+//  print(&head);
+
+//  head =  sort(head);
+//  print(&head);
+>>>>>>> 60815ad37796d07a3b22ecfd96e28bffc2b44f17
   return 0;
   
 }
+
+//nodePtr sort(nodePtr header)
+//{
+//
+//  nodePtr head = header;
+//
+//  if( head == NULL) {exit(0);}
+//
+//  nodePtr next = header->next;
+//  nodePtr tmp = NULL;
+//
+//  bool swap = false;
+//  int index = 0;
+//  int processes = count(head);
+//
+//
+//do {
+//
+//    swap = false;
+//
+//	header = head;
+//	
+//
+//
+//
+//	while (header->next != NULL)
+//    {
+//      printf("%d > %d \n",header->process->pid , next->process->pid );
+//      if (header->process->pid > next->process->pid )
+//      {
+//
+//        index = header->process->pid;
+//      printf("\tindex %d  \n",index );
+////        tmp = pop(&head,index);
+//	  printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//tmp = popPid( &head, index);
+//print(&head);
+//        push(&head,tmp,index);
+//		print(&head);
+//		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//// head means of pushing finto struct        
+//     	header = next;
+//        next = tmp; 
+//        swap = true; 
+//        printf("\tswap %d > %d\n", header->process->pid , next->process->pid );
+//		
+//      }
+//      header = header->next;
+//    } 
+//	if (next->next != NULL)
+//	{
+//		next = next->next;
+//	}
+//	else
+//	{
+//		next = head;
+//	}
+//  print(&head);
+////break;
+//  } while(swap == true);
+//}
+//
+
+
 
