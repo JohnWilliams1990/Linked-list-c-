@@ -240,6 +240,171 @@ int count(nodePtr head)
   return sum; 
 }
 
+nodePtr popPid( nodePtr * arg, int index)
+{
+
+  node tmp;
+  int counter = 0;
+  nodePtr curPtr = (*arg);
+  nodePtr prev = (*arg)->prev;
+
+  if ((*arg) == NULL)
+  {
+    printf("HERE\n\n");
+    return curPtr;
+  } 
+  while (curPtr->next != NULL && curPtr->process->pid !=  index)
+  {
+    prev = curPtr;
+    curPtr = curPtr->next;
+    counter +=1;
+  }
+  if(prev != NULL) 
+  {
+    prev->next = curPtr->next;
+  }
+  else
+  { // we are at head of list to pop front
+    (*arg) = (*arg)->next;
+    if ((*arg) != NULL) 
+    { 
+      (*arg)->prev = curPtr->prev;
+    }
+  }
+
+  if (curPtr->next != NULL)
+  {
+    curPtr->next->prev = prev;
+  }
+    return curPtr; 
+}
+
+
+nodePtr push( nodePtr * arg, node* item, int index)
+{
+  int counter = 1;
+  nodePtr curPtr = (*arg);
+  nodePtr tmpPtr = NULL;
+
+
+  if ( curPtr == NULL)
+  {
+    (*arg) = calloc(1, sizeof( node));
+    (*arg)->prev = NULL;
+    (*arg)->next = NULL;  
+    (*arg)->process = calloc(1, sizeof(struct pcb_t));
+    (*arg)->process->pid = item->process->pid;
+    (*arg)->process->arrivalTime= item->process->arrivalTime;
+    (*arg)->process->burstTime = item->process->burstTime  ;
+    (*arg)->process->contextCount = item->process->contextCount;
+    (*arg)->process->finishTime = item->process->finishTime;
+    (*arg)->process->waitTime = item->process->waitTime;
+    (*arg)->process->turnTime = item->process->turnTime;
+    (*arg)->process->respTime = item->process->respTime;
+    (*arg)->process->contextCount = item->process->contextCount;
+    (*arg)->process->curRunningTime = item->process->curRunningTime;
+    (*arg)->process->firstRun = item->process->firstRun;
+    (*arg)->process->timeMarker = item->process->timeMarker;
+    (*arg)->process->ran = item->process->ran;
+    (*arg)->data = 0;
+  }
+
+  while (counter < index - 1 && curPtr->next != NULL)
+  {
+     curPtr = curPtr->next;
+     counter += 1;
+  }
+
+  if (index == 1)
+  {
+    tmpPtr= calloc(1, sizeof( node));
+    tmpPtr->prev = NULL;
+    tmpPtr->next = NULL;
+    tmpPtr->process = calloc(1, sizeof(struct pcb_t));
+    tmpPtr->process->pid = item->process->pid;
+    tmpPtr->process->arrivalTime= item->process->arrivalTime;
+    tmpPtr->process->burstTime = item->process->burstTime  ;
+    tmpPtr->process->contextCount = item->process->contextCount;
+    tmpPtr->process->finishTime = item->process->finishTime;
+    tmpPtr->process->waitTime = item->process->waitTime;
+    tmpPtr->process->turnTime = item->process->turnTime;
+    tmpPtr->process->respTime = item->process->respTime;
+    tmpPtr->process->contextCount = item->process->contextCount;
+    tmpPtr->process->curRunningTime = item->process->curRunningTime;
+    tmpPtr->process->firstRun = item->process->firstRun;
+    tmpPtr->process->timeMarker = item->process->timeMarker;
+    tmpPtr->process->ran = item->process->ran;
+    tmpPtr->data = 0;
+
+    tmpPtr->prev = NULL;
+    tmpPtr->next = curPtr;
+    
+    if (curPtr->prev != NULL)
+    {
+      curPtr->prev = tmpPtr;
+    }
+
+    return tmpPtr;
+  }
+
+
+  else {
+  
+  // grab item before overwriting it
+    tmpPtr = curPtr->next;
+    
+  
+    curPtr->next = calloc(1, sizeof(struct node));
+    curPtr->next->process = calloc(1, sizeof(struct pcb_t));
+    curPtr->next->process->pid         = item->process->pid         ;
+    curPtr->next->process->arrivalTime= item->process->arrivalTime;
+    curPtr->next->process->burstTime  = item->process->burstTime  ;
+    curPtr->next->process->contextCount = item->process->contextCount;
+  
+    curPtr->next->process->finishTime = item->process->finishTime;
+    curPtr->next->process->waitTime = item->process->waitTime;
+    curPtr->next->process->turnTime = item->process->turnTime;
+    curPtr->next->process->respTime = item->process->respTime;
+    curPtr->next->process->contextCount = item->process->contextCount;
+    curPtr->next->process->curRunningTime = item->process->curRunningTime;;
+     
+    curPtr->next->process->firstRun = item->process->firstRun;
+    curPtr->next->process->timeMarker = item->process->timeMarker;
+    curPtr->next->process->ran = item->process->ran;
+    curPtr->next->prev = curPtr;
+    curPtr->next->data = counter;
+   
+    curPtr = curPtr->next;
+    curPtr->next = tmpPtr; 
+    
+    if (curPtr->next != NULL)
+    {
+      curPtr->next->prev = curPtr;
+    }
+  }
+  
+  
+  
+  return (*arg);
+
+}
+
+nodePtr sort(nodePtr header) {
+  nodePtr tmp = NULL;
+  nodePtr head = header;
+  int processes = count(head);
+  for (int i = 1; i < processes; i++)
+  {
+   // printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    tmp = popPid(&head, i);
+   // print(&head);
+    head = push(&head, tmp, i);
+   // print(&head);
+   // printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");  
+  }
+  return head;
+}
+
 nodePtr FCFS(nodePtr header)
 {
   nodePtr head = header;
@@ -349,122 +514,12 @@ nodePtr RoundRobin(nodePtr header, int quantum)
 
   } 
   push_back(&head, currentPCB); 
+  head = sort(head);
   return head;
 }
 
 
 
-nodePtr push( nodePtr * arg, node* item, int index)
-{
-  int counter = 1;
-  nodePtr curPtr = (*arg);
-  nodePtr tmpPtr = NULL;
-
-
-  if ( curPtr == NULL)
-  {
-    (*arg) = calloc(1, sizeof( node));
-    (*arg)->prev = NULL;
-    (*arg)->next = NULL;  
-    (*arg)->process = calloc(1, sizeof(struct pcb_t));
-    (*arg)->process->pid = item->process->pid;
-    (*arg)->process->arrivalTime= item->process->arrivalTime;
-    (*arg)->process->burstTime = item->process->burstTime  ;
-    (*arg)->process->contextCount = item->process->contextCount;
-    (*arg)->process->finishTime = item->process->finishTime;
-    (*arg)->process->waitTime = item->process->waitTime;
-    (*arg)->process->turnTime = item->process->turnTime;
-    (*arg)->process->respTime = item->process->respTime;
-    (*arg)->process->contextCount = item->process->contextCount;
-    (*arg)->process->curRunningTime = item->process->curRunningTime;
-    (*arg)->process->firstRun = item->process->firstRun;
-    (*arg)->process->timeMarker = item->process->timeMarker;
-    (*arg)->process->ran = item->process->ran;
-    (*arg)->data = 0;
-  }
-
-  while (counter < index - 1 && curPtr->next != NULL)
-  {
-     curPtr = curPtr->next;
-     counter += 1;
-  }
-
-  if (index == 1)
-  {
-
-    printf("asdasdasdsadsadasdasdasdsad\n\n\n");
-  
-    tmpPtr= calloc(1, sizeof( node));
-    tmpPtr->prev = NULL;
-    tmpPtr->next = NULL;
-    tmpPtr->process = calloc(1, sizeof(struct pcb_t));
-    tmpPtr->process->pid = item->process->pid;
-    tmpPtr->process->arrivalTime= item->process->arrivalTime;
-    tmpPtr->process->burstTime = item->process->burstTime  ;
-    tmpPtr->process->contextCount = item->process->contextCount;
-    tmpPtr->process->finishTime = item->process->finishTime;
-    tmpPtr->process->waitTime = item->process->waitTime;
-    tmpPtr->process->turnTime = item->process->turnTime;
-    tmpPtr->process->respTime = item->process->respTime;
-    tmpPtr->process->contextCount = item->process->contextCount;
-    tmpPtr->process->curRunningTime = item->process->curRunningTime;
-    tmpPtr->process->firstRun = item->process->firstRun;
-    tmpPtr->process->timeMarker = item->process->timeMarker;
-    tmpPtr->process->ran = item->process->ran;
-    tmpPtr->data = 0;
-
-    tmpPtr->prev = NULL;
-    tmpPtr->next = curPtr;
-    
-    if (curPtr->prev != NULL)
-    {
-      curPtr->prev = tmpPtr;
-    }
-
-    return tmpPtr;
-  }
-
-
-else {
-
-// grab item before overwriting it
-  tmpPtr = curPtr->next;
-  
-
-  curPtr->next = calloc(1, sizeof(struct node));
-  curPtr->next->process = calloc(1, sizeof(struct pcb_t));
-  curPtr->next->process->pid         = item->process->pid         ;
-  curPtr->next->process->arrivalTime= item->process->arrivalTime;
-  curPtr->next->process->burstTime  = item->process->burstTime  ;
-  curPtr->next->process->contextCount = item->process->contextCount;
-
-  curPtr->next->process->finishTime = item->process->finishTime;
-  curPtr->next->process->waitTime = item->process->waitTime;
-  curPtr->next->process->turnTime = item->process->turnTime;
-  curPtr->next->process->respTime = item->process->respTime;
-  curPtr->next->process->contextCount = item->process->contextCount;
-  curPtr->next->process->curRunningTime = item->process->curRunningTime;;
-   
-  curPtr->next->process->firstRun = item->process->firstRun;
-  curPtr->next->process->timeMarker = item->process->timeMarker;
-  curPtr->next->process->ran = item->process->ran;
-  curPtr->next->prev = curPtr;
-  curPtr->next->data = counter;
- 
-  curPtr = curPtr->next;
-  curPtr->next = tmpPtr; 
-  
-  if (curPtr->next != NULL)
-  {
-    curPtr->next->prev = curPtr;
-  }
-}
-
-
-
-return (*arg);
-
-}
 
 
 
