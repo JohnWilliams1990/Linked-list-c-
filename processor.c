@@ -5,131 +5,23 @@
 
 
 // pop elememt from list at specif index
-nodePtr popPid( nodePtr * arg, int index)
+
+int least(nodePtr head)
 {
-
-  node tmp;
-  int counter = 0;
-  nodePtr curPtr = (*arg);
-  nodePtr prev = (*arg)->prev;
-
-  if ((*arg) == NULL)
+  nodePtr curPtr = head;
+  int burst = curPtr->process->burstTime;
+  int pid = curPtr->process->pid;
+  while (curPtr != NULL)
   {
-    printf("HERE\n\n");
-    return curPtr;
-  }
-  
-  while (curPtr->next != NULL && curPtr->process->pid !=  index)
-  {
-    prev = curPtr;
-    curPtr = curPtr->next;
-    counter +=1;
-  }
-  if(prev != NULL) 
-  {
-    prev->next = curPtr->next;
-  }
-  else
-  { // we are at head of list to pop front
-    (*arg) = (*arg)->next;
-    if ((*arg) != NULL) 
-    { 
-      (*arg)->prev = curPtr->prev;
-    }
-  }
-
-  if (curPtr->next != NULL)
-  {
-    curPtr->next->prev = prev;
-  }
-    return curPtr; 
-}
-
-/*
-nodePtr sort(nodePtr header)
-{
-
-  nodePtr head = header;
-
-  if( head == NULL) {exit(0);}
-
-  nodePtr next = header->next;
-  nodePtr tmp = NULL;
-
-  bool swap = false;
-  int index = 0;
-  int processes = count(head);
-
-
-do {
-
-    swap = false;
-
-	header = head;
-	
-
-
-
-	while (header->next != NULL)
+    if (curPtr->process->burstTime < burst)
     {
-      printf("%d > %d \n",header->process->pid , next->process->pid );
-      if (header->process->pid > next->process->pid )
-      {
-
-        index = header->process->pid;
-      printf("\tindex %d  \n",index );
-//        tmp = pop(&head,index);
-	  printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-tmp = popPid( &head, index);
-print(&head);
-        push(&head,tmp,index);
-		print(&head);
-		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-// head means of pushing finto struct        
-     	header = next;
-        next = tmp; 
-        swap = true; 
-        printf("\tswap %d > %d\n", header->process->pid , next->process->pid );
-		
-      }
-      header = header->next;
-    } 
-	if (next->next != NULL)
-	{
-		next = next->next;
-	}
-	else
-	{
-		next = head;
-	}
-  print(&head);
-//break;
-  } while(swap == true);
+      burst = curPtr->process->burstTime;
+      pid = curPtr->process->pid;
+    }
+    curPtr = curPtr->next;
+  }
+  return pid; 
 }
-*/
-
-nodePtr sort(nodePtr header) {
-
-	nodePtr tmp = NULL;
-	nodePtr head = header;
-
-	int processes = count(head);
-
-	for (int i = 1; i < processes; i++)
-	{
-		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-		tmp = popPid(&head, i);
-		print(&head);
-		head = push(&head, tmp, i);
-		print(&head);
-		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-
-	}
-
-	return head;
-
-}
-
 
 
 
@@ -173,11 +65,6 @@ nodePtr SJF(nodePtr header)
 
 
 
-
-
-
-
-
 int main(int argc, char *argv[])
 {
 
@@ -191,10 +78,10 @@ int main(int argc, char *argv[])
 
   FILE* file;
   //file = fopen (argv[1], "r");
-  //file = fopen ("input5", "r");
+  file = fopen ("input5", "r");
   //file = fopen ("inputHW", "r");
   //file = fopen ("input10", "r");
-  file = fopen ("input100", "r");
+  //file = fopen ("input100", "r");
   nodePtr head = NULL;
   head = (nodePtr) read_in_file( file, head);
 
@@ -214,11 +101,87 @@ int main(int argc, char *argv[])
   print(&head);
 
 
+
+for(int i = 0; i < 100; i++)
+{
+int x = least(head); 
+printf("%d\n", x);
+pop(&head,x);
+
+  print(&head);
+
+}
+
+
 //  print(&head);
 
-  head =  sort(head);
-  print(&head);
+//  head =  sort(head);
+//  print(&head);
   return 0;
   
 }
+
+//nodePtr sort(nodePtr header)
+//{
+//
+//  nodePtr head = header;
+//
+//  if( head == NULL) {exit(0);}
+//
+//  nodePtr next = header->next;
+//  nodePtr tmp = NULL;
+//
+//  bool swap = false;
+//  int index = 0;
+//  int processes = count(head);
+//
+//
+//do {
+//
+//    swap = false;
+//
+//	header = head;
+//	
+//
+//
+//
+//	while (header->next != NULL)
+//    {
+//      printf("%d > %d \n",header->process->pid , next->process->pid );
+//      if (header->process->pid > next->process->pid )
+//      {
+//
+//        index = header->process->pid;
+//      printf("\tindex %d  \n",index );
+////        tmp = pop(&head,index);
+//	  printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//tmp = popPid( &head, index);
+//print(&head);
+//        push(&head,tmp,index);
+//		print(&head);
+//		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//// head means of pushing finto struct        
+//     	header = next;
+//        next = tmp; 
+//        swap = true; 
+//        printf("\tswap %d > %d\n", header->process->pid , next->process->pid );
+//		
+//      }
+//      header = header->next;
+//    } 
+//	if (next->next != NULL)
+//	{
+//		next = next->next;
+//	}
+//	else
+//	{
+//		next = head;
+//	}
+//  print(&head);
+////break;
+//  } while(swap == true);
+//}
+//
+
+
 
