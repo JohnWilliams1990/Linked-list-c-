@@ -7,7 +7,7 @@ LIBDIR =
 
 CC = gcc
 
-CXXFLAGS = -g -std=c99
+CXXFLAGS = -g -std=c99 -Werror
 
 LIBS = -lm
 

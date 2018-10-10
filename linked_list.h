@@ -42,6 +42,40 @@ void freeNode(nodePtr * arg) {
 }
 
 
+int least(nodePtr head)
+{
+  nodePtr curPtr = head;
+  int burst = curPtr->process->burstTime;
+  int pid = curPtr->process->pid;
+  while (curPtr != NULL)
+  {
+    if (curPtr->process->burstTime < burst)
+    {
+      burst = curPtr->process->burstTime;
+      pid = curPtr->process->pid;
+    }
+    curPtr = curPtr->next;
+  }
+  return pid; 
+}
+
+int leastleft(nodePtr head)
+{
+	nodePtr curPtr = head;
+	int burst = curPtr->process->burstTime - curPtr->process->curRunningTime;
+	int pid = curPtr->process->pid;
+	while (curPtr != NULL)
+	{
+		if ((curPtr->process->burstTime - curPtr->process->curRunningTime) < burst)
+		{
+			burst = curPtr->process->burstTime - curPtr->process->curRunningTime;
+			pid = curPtr->process->pid;
+		}
+		curPtr = curPtr->next;
+	}
+	return pid;
+}
+
 
 // push element to back of list
 void push_back( nodePtr * arg, node* item)
@@ -519,6 +553,73 @@ nodePtr RoundRobin(nodePtr header, int quantum)
 }
 
 
+nodePtr SJF(nodePtr header)
+{
+  nodePtr head = header;
+  int time = 0;
+  int curPcbVal = 0;
+  nodePtr currentPCB = NULL;
+  nodePtr tmpPCB = NULL;
+  int stop = getTime(head); 
+  int processes = count(head);
+  int remainingProcesses = 0;
+  int timeRemaining = 0; // becomes process time in general 
+  int pidval = 0;
+  nodePtr queue = NULL;
+  while (time <= stop)
+  {
+    // move ariving process to queue
+    if (head != NULL && remainingProcesses != processes && time >=  head->process->arrivalTime) {
+
+      tmpPCB = pop(&head, curPcbVal);
+      push_back(&queue, tmpPCB);
+      remainingProcesses += 1;
+    } 
+    if (timeRemaining == 0){
+      if (currentPCB != NULL && currentPCB->process->curRunningTime == currentPCB->process->burstTime) {
+
+        if (time == stop)
+        {
+          break; 
+        }
+
+        // take task and put back into main list 
+         push_back(&head, currentPCB); 
+         pidval = least(queue);
+         currentPCB = popPid(&queue,pidval);
+
+	 timeRemaining = currentPCB->process->burstTime;
+         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+      }
+      else if (currentPCB == NULL) { 
+        pidval = least(queue);
+        //printf("%d here \n\n", pidval);
+        //print(&queue);
+        currentPCB = popPid(&queue,pidval);
+	timeRemaining = currentPCB->process->burstTime;
+        currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+      }
+    }
+    //printf("~~~~~~~~~~~~~~~~~time %d~~~~~~~~~~~~~~~~~~~~~\n", time);
+    //printf("PID: %d\n", currentPCB->process->pid);
+    ////print(&queue);
+    time += 1;
+    timeRemaining -= 1;
+    currentPCB->process->curRunningTime +=1;    
+
+
+
+    if (timeRemaining == 0)
+    {
+      currentPCB->process->finishTime = time ;
+      currentPCB->process->turnTime = currentPCB->process->finishTime - currentPCB->process->arrivalTime;
+      currentPCB->process->respTime = currentPCB->process->waitTime;
+    }
+  } 
+  push_back(&head, currentPCB); 
+  head = sort(head);
+  return head;
+}
 
 
 

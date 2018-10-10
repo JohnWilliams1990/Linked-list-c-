@@ -6,29 +6,15 @@
 
 // pop elememt from list at specif index
 
-int least(nodePtr head)
-{
-  nodePtr curPtr = head;
-  int burst = curPtr->process->burstTime;
-  int pid = curPtr->process->pid;
-  while (curPtr != NULL)
-  {
-    if (curPtr->process->burstTime < burst)
-    {
-      burst = curPtr->process->burstTime;
-      pid = curPtr->process->pid;
-    }
-    curPtr = curPtr->next;
-  }
-  return pid; 
-}
 
 
 
 
 
 
-nodePtr SJF(nodePtr header)
+
+
+nodePtr SRTF(nodePtr header)
 {
   nodePtr head = header;
   int time = 0;
@@ -39,53 +25,72 @@ nodePtr SJF(nodePtr header)
   int processes = count(head);
   int remainingProcesses = 0;
   int timeRemaining = 0; // becomes process time in general 
-  int timeMarker = 0;
   int pidval = 0;
   nodePtr queue = NULL;
   while (time <= stop)
   {
     // move ariving process to queue
     if (head != NULL && remainingProcesses != processes && time >=  head->process->arrivalTime) {
-
       tmpPCB = pop(&head, curPcbVal);
       push_back(&queue, tmpPCB);
       remainingProcesses += 1;
     } 
-    if (timeRemaining == 0){
-      if (currentPCB != NULL && currentPCB->process->curRunningTime == currentPCB->process->burstTime) {
-        // take task and put back into main list 
-         push_back(&head, currentPCB); 
-         pidval = least(queue);
-         printf("%d here \n\n", pidval);
-         print(&queue);	
-         currentPCB = popPid(&queue,pidval);
-		 timeRemaining = currentPCB->process->burstTime;
-      }
-      else if (currentPCB == NULL) { 
-        pidval = least(queue);
-        printf("%d here \n\n", pidval);
-        print(&queue);
-        currentPCB = popPid(&queue,pidval);
-		timeRemaining = currentPCB->process->burstTime;
+
+
+    if (tmpPCB != NULL && currentPCB != NULL){
+      if( tmpPCB->process->burstTime - tmpPCB->process->curRunningTime < currentPCB->process->burstTime - currentPCB->process->curRunningTime) {
+        if (timeRemaining != 0) {
+          push_back(&queue, currentPCB);
+          pidval = leastleft(queue);
+          currentPCB = popPid(&queue, pidval);
+          timeRemaining = currentPCB->process->burstTime;
+          currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+        }
       }
     }
+
+    if (timeRemaining == 0 ){ 
+      if (currentPCB != NULL && currentPCB->process->curRunningTime == currentPCB->process->burstTime) {
+        if (time == stop)
+        { break; }
+        // take task and put back into main list 
+         push_back(&head, currentPCB); 
+         pidval = leastleft(queue);
+         currentPCB = popPid(&queue,pidval);
+	 timeRemaining = currentPCB->process->burstTime - currentPCB->process->curRunningTime;
+         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime ;
+      }
+      else if (currentPCB == NULL) { 
+        pidval = leastleft(queue);
+        currentPCB = popPid(&queue,pidval);
+	timeRemaining = currentPCB->process->burstTime - currentPCB->process->curRunningTime;
+        currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+      }
+    }
+	if (queue != NULL) {
+
+		pidval = leastleft(queue);
+		tmpPCB = popPid(&queue, pidval);
+		push_back(&queue, tmpPCB);
+		//print(&queue);
+	}
 	printf("~~~~~~~~~~~~~~~~~time %d~~~~~~~~~~~~~~~~~~~~~\n", time);
 	printf("PID: %d\n", currentPCB->process->pid);
-	//print(&queue);
-
-    
-    time += 1;
+	
+	time += 1;
     timeRemaining -= 1;
     currentPCB->process->curRunningTime +=1;    
-
-
+    if (timeRemaining == 0)
+    {
+      currentPCB->process->finishTime = time ;
+      currentPCB->process->turnTime = currentPCB->process->finishTime - currentPCB->process->arrivalTime;
+      currentPCB->process->respTime = currentPCB->process->waitTime;
+    }
   } 
   push_back(&head, currentPCB); 
   head = sort(head);
   return head;
 }
-
-
 
 
 int main(int argc, char *argv[])
@@ -109,102 +114,36 @@ int main(int argc, char *argv[])
   head = (nodePtr) read_in_file( file, head);
 
 //  printf("~~~~~~~~~~>>>>FCFS\n");
-//  head = FCFS(head);
-//  print(&head);
-
-
+  head = FCFS(head);
+  print(&head);
+//
+//
+  head =  SRTF(head);
   print(&head);
   head =  SJF(head);
   print(&head);
 
 
-//  int quantum = 1;
+  int quantum = 1;
 //  printf("~~~~~~~~~~>>>>Round robin with quantum of size: %d\n",quantum);
-//  head = RoundRobin(head, quantum);
+  head = RoundRobin(head, quantum);
 //  print(&head);
 
 
-//
-//for(int i = 0; i < 100; i++)
+
+//if (argv[1] != NULL)
 //{
-//  int x = least(head); 
+//long menu = atoi(argv[1]);
 //
-//  printf("%d\n", x);
-//  popPid(&head,x);
+//printf("%s ", argv[1]);
+//if (menu == 0){head = FCFS(head);  printf("~~~~~~~~~~>>>>FCFS\n");}
+//else if (menu == 1){ head =  SJF(head); printf("~~~~~~~~~~>>>>SJF\n");}
+//else if (menu == 2){printf("asdasd"); printf("~~~~~~~~~~>>>>SRTF\n");}
+//else if (menu == 3){head = RoundRobin(head, quantum); printf("~~~~~~~~~~>>>>RR\n");}
 //  print(&head);
-//  
 //}
 //
-
-//  print(&head);
-
-//  head =  sort(head);
-//  print(&head);
   return 0;
   
 }
-
-//nodePtr sort(nodePtr header)
-//{
-//
-//  nodePtr head = header;
-//
-//  if( head == NULL) {exit(0);}
-//
-//  nodePtr next = header->next;
-//  nodePtr tmp = NULL;
-//
-//  bool swap = false;
-//  int index = 0;
-//  int processes = count(head);
-//
-//
-//do {
-//
-//    swap = false;
-//
-//	header = head;
-//	
-//
-//
-//
-//	while (header->next != NULL)
-//    {
-//      printf("%d > %d \n",header->process->pid , next->process->pid );
-//      if (header->process->pid > next->process->pid )
-//      {
-//
-//        index = header->process->pid;
-//      printf("\tindex %d  \n",index );
-////        tmp = pop(&head,index);
-//	  printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-//tmp = popPid( &head, index);
-//print(&head);
-//        push(&head,tmp,index);
-//		print(&head);
-//		printf("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-//// head means of pushing finto struct        
-//     	header = next;
-//        next = tmp; 
-//        swap = true; 
-//        printf("\tswap %d > %d\n", header->process->pid , next->process->pid );
-//		
-//      }
-//      header = header->next;
-//    } 
-//	if (next->next != NULL)
-//	{
-//		next = next->next;
-//	}
-//	else
-//	{
-//		next = head;
-//	}
-//  print(&head);
-////break;
-//  } while(swap == true);
-//}
-//
-
-
 
