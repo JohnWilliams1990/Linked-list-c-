@@ -4,16 +4,6 @@
 #include "linked_list.h"
 
 
-// pop elememt from list at specif index
-
-
-
-
-
-
-
-
-
 nodePtr SRTF(nodePtr header)
 {
   nodePtr head = header;
@@ -36,21 +26,37 @@ nodePtr SRTF(nodePtr header)
       remainingProcesses += 1;
     } 
 
-
     if (tmpPCB != NULL && currentPCB != NULL){
       if( tmpPCB->process->burstTime - tmpPCB->process->curRunningTime < currentPCB->process->burstTime - currentPCB->process->curRunningTime) {
-        if (timeRemaining != 0) {
+        // preemptive context switch here...... oh yea 
+ 
+       if (timeRemaining != 0) {
+//          currentPCB->process->waitTime += (time - currentPCB->process->timeMarker -1);
           push_back(&queue, currentPCB);
           pidval = leastleft(queue);
           currentPCB = popPid(&queue, pidval);
           timeRemaining = currentPCB->process->burstTime;
-          currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+          if (currentPCB->process->curRunningTime == 0)
+	  {
+            currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+          }
+          else 
+          {
+		printf("asdasdasdasd\n");
+            currentPCB->process->waitTime += (time - currentPCB->process->timeMarker -1);
+          }
+	//currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+// value of y here 	 
         }
+
+
       }
     }
 
     if (timeRemaining == 0 ){ 
       if (currentPCB != NULL && currentPCB->process->curRunningTime == currentPCB->process->burstTime) {
+	// process is finished so stop...........
+
         if (time == stop)
         { break; }
         // take task and put back into main list 
@@ -58,13 +64,16 @@ nodePtr SRTF(nodePtr header)
          pidval = leastleft(queue);
          currentPCB = popPid(&queue,pidval);
 	 timeRemaining = currentPCB->process->burstTime - currentPCB->process->curRunningTime;
-         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime ;
+         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime -1;
+         currentPCB->process->timeMarker = time;
       }
       else if (currentPCB == NULL) { 
+	// start process 1
         pidval = leastleft(queue);
         currentPCB = popPid(&queue,pidval);
 	timeRemaining = currentPCB->process->burstTime - currentPCB->process->curRunningTime;
         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
+        currentPCB->process->timeMarker = time;
       }
     }
 	if (queue != NULL) {
@@ -76,6 +85,7 @@ nodePtr SRTF(nodePtr header)
 	}
 	printf("~~~~~~~~~~~~~~~~~time %d~~~~~~~~~~~~~~~~~~~~~\n", time);
 	printf("PID: %d\n", currentPCB->process->pid);
+	printf("Waiting Time: %d\n", currentPCB->process->waitTime);
 	
 	time += 1;
     timeRemaining -= 1;
@@ -120,8 +130,8 @@ int main(int argc, char *argv[])
 //
   head =  SRTF(head);
   print(&head);
-  head =  SJF(head);
-  print(&head);
+//  head =  SJF(head);
+//  print(&head);
 
 
   int quantum = 1;
