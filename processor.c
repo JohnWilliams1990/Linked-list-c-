@@ -31,8 +31,11 @@ nodePtr SRTF(nodePtr header)
         // preemptive context switch here...... oh yea 
  
        if (timeRemaining != 0) {
-//          currentPCB->process->waitTime += (time - currentPCB->process->timeMarker -1);
+		printf("asdasdasdasd\n");
+
           push_back(&queue, currentPCB);
+
+
           pidval = leastleft(queue);
           currentPCB = popPid(&queue, pidval);
           timeRemaining = currentPCB->process->burstTime;
@@ -40,16 +43,7 @@ nodePtr SRTF(nodePtr header)
 	  {
             currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
           }
-          else 
-          {
-		printf("asdasdasdasd\n");
-            currentPCB->process->waitTime += (time - currentPCB->process->timeMarker -1);
-          }
-	//currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
-// value of y here 	 
         }
-
-
       }
     }
 
@@ -64,8 +58,29 @@ nodePtr SRTF(nodePtr header)
          pidval = leastleft(queue);
          currentPCB = popPid(&queue,pidval);
 	 timeRemaining = currentPCB->process->burstTime - currentPCB->process->curRunningTime;
-         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime -1;
-         currentPCB->process->timeMarker = time;
+
+if ( currentPCB->process->curRunningTime != 0)
+{
+  printf("waitTime~~~~~in %d\n", currentPCB->process->waitTime);
+  currentPCB->process->waitTime += (time - currentPCB->process->timeMarker );
+    printf("PID: %d\n", currentPCB->process->pid);
+  printf("waitTime~~~~~in %d\n", currentPCB->process->waitTime);
+  printf("time ~~~~~in %d\n", time);
+  printf("Time marker~~~~~in %d\n", currentPCB->process->timeMarker);
+}
+else 
+{ 
+  currentPCB->process->waitTime = time - currentPCB->process->arrivalTime ;
+  printf("Initial wait, %d \n",  currentPCB->process->waitTime);
+}
+
+	printf("change times");
+	printf("Time marker~~~~~~~~: %d\n", currentPCB->process->timeMarker);
+         currentPCB->process->timeMarker = time +1 ;
+
+	printf("Time marker~~~~~~~~: %d\n", currentPCB->process->timeMarker);
+
+
       }
       else if (currentPCB == NULL) { 
 	// start process 1
@@ -73,21 +88,23 @@ nodePtr SRTF(nodePtr header)
         currentPCB = popPid(&queue,pidval);
 	timeRemaining = currentPCB->process->burstTime - currentPCB->process->curRunningTime;
         currentPCB->process->waitTime = time - currentPCB->process->arrivalTime;
-        currentPCB->process->timeMarker = time;
+        currentPCB->process->timeMarker = time +1;
       }
     }
-	if (queue != NULL) {
-
-		pidval = leastleft(queue);
-		tmpPCB = popPid(&queue, pidval);
-		push_back(&queue, tmpPCB);
-		//print(&queue);
-	}
-	printf("~~~~~~~~~~~~~~~~~time %d~~~~~~~~~~~~~~~~~~~~~\n", time);
-	printf("PID: %d\n", currentPCB->process->pid);
-	printf("Waiting Time: %d\n", currentPCB->process->waitTime);
-	
-	time += 1;
+    if (queue != NULL) {
+    
+    	pidval = leastleft(queue);
+    	tmpPCB = popPid(&queue, pidval);
+    	push_back(&queue, tmpPCB);
+    	//print(&queue);
+    }
+    printf("~~~~~~~~~~~~~~~~~time %d~~~~~~~~~~~~~~~~~~~~~\n", time);
+    printf("PID: %d\n", currentPCB->process->pid);
+    printf("Waiting Time: %d\n", currentPCB->process->waitTime);
+    printf("Time marker: %d\n", currentPCB->process->timeMarker);
+    
+    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    time += 1;
     timeRemaining -= 1;
     currentPCB->process->curRunningTime +=1;    
     if (timeRemaining == 0)
@@ -116,8 +133,8 @@ int main(int argc, char *argv[])
 
   FILE* file;
   //file = fopen (argv[1], "r");
-  file = fopen ("input5", "r");
-  //file = fopen ("inputHW", "r");
+  //file = fopen ("input5", "r");
+  file = fopen ("inputHW", "r");
   //file = fopen ("input10", "r");
   //file = fopen ("input100", "r");
   nodePtr head = NULL;
