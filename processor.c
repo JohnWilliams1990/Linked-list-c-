@@ -22,10 +22,7 @@ int least(nodePtr head)
   }
   return pid; 
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 60815ad37796d07a3b22ecfd96e28bffc2b44f17
 
 
 
@@ -91,11 +88,6 @@ nodePtr SJF(nodePtr header)
 
 
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 60815ad37796d07a3b22ecfd96e28bffc2b44f17
 int main(int argc, char *argv[])
 {
 
@@ -115,14 +107,17 @@ int main(int argc, char *argv[])
   //file = fopen ("input100", "r");
   nodePtr head = NULL;
   head = (nodePtr) read_in_file( file, head);
-//
+
 //  printf("~~~~~~~~~~>>>>FCFS\n");
 //  head = FCFS(head);
 //  print(&head);
-//
-//
-//
-//
+
+
+  print(&head);
+  head =  SJF(head);
+  print(&head);
+
+
 //  int quantum = 1;
 //  printf("~~~~~~~~~~>>>>Round robin with quantum of size: %d\n",quantum);
 //  head = RoundRobin(head, quantum);
@@ -141,34 +136,10 @@ int main(int argc, char *argv[])
 //}
 //
 
-//  head =  sort(head);
-//  print(&head);
-  print(&head);
-  head =  SJF(head);
-  print(&head);
-<<<<<<< HEAD
-//  print(&head);
-
-=======
-
-
-
-for(int i = 0; i < 100; i++)
-{
-int x = least(head); 
-printf("%d\n", x);
-pop(&head,x);
-
-  print(&head);
-
-}
-
-
 //  print(&head);
 
 //  head =  sort(head);
 //  print(&head);
->>>>>>> 60815ad37796d07a3b22ecfd96e28bffc2b44f17
   return 0;
   
 }
