@@ -1,7 +1,17 @@
 #ifndef NODE
 #define NODE
-
 #include<stdbool.h>
+
+
+typedef struct stat_t {
+  
+  float avgCompTime;
+  float avgWaitTime;
+  float avgTurnTime;
+  float avgRespTime;
+  float totContextCount;
+
+} stat, * statPtr ;
 
 typedef struct pcb_t {
   int pid;
@@ -14,12 +24,6 @@ typedef struct pcb_t {
   int respTime;
   int contextCount;
   
-  int avgCompTime;
-  int avgWaitTime;
-  int avgTurnTime;
-  int avgRespTime;
-  int totContextCount;
-
   int timeMarker;
   int firstRun;
   bool ran;
